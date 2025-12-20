@@ -219,6 +219,8 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     $scope.cells[index].tile.halfWallVic = [];
                 if(!$scope.cells[index].tile.halfWallVicRots)
                     $scope.cells[index].tile.halfWallVicRots = [];
+                if(!$scope.cells[index].tile.halfWallVicFakes)
+                    $scope.cells[index].tile.halfWallVicFakes = [];
             }
         }
         
@@ -1344,13 +1346,15 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
      * @property {Number } wall_token_type
      * @property {Number } wall_token_place
      * @property {Number } wall_token_front_rot
+     * @poperty  {boolean} wall_token_is_fake
      *
      * @property {string } inner_half_walls
      * @property {string } outer_half_walls
      * @property {Number } outer_half_walls_info
      * @property {string } curved_walls
      * @property {Array  } half_wall_tokens
-     * @property {Number } half_wall_tokens_front_rot
+     * @property {Array  } half_wall_tokens_front_rot
+     * @poperty  {Array  } half_wall_tokens_fakes
      *
      * @property {string } floor_color
      * @property {Number } room_number
@@ -1374,13 +1378,15 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     wall_token_type            : 0,
                     wall_token_place           : 0,
                     wall_token_front_rot       : 0,
+                    wall_token_is_fake         : false,
 
                     inner_half_walls           : '',
                     outer_half_walls           : '',
                     outer_half_walls_info      : 0,
                     curved_walls               : '',
                     half_wall_tokens           : [],
-                    half_wall_tokens_front_rot : 0,
+                    half_wall_tokens_front_rot : [],
+                    half_wall_tokens_fakes     : [],
 
                     floor_color                : '',
                     room_number                : 0,
@@ -1477,6 +1483,11 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     tile.wall_token_front_rot = degreesToRadians(thisCell.tile.single_victim_rotation)
                 }
 
+                tile.wall_token_is_fake = false;
+                if (thisCell.tile.victim_is_fake) {
+                    tile.wall_token_is_fake = true;
+                }
+
                 if (thisCell.tile.color) {
                     floorColor = '';
                     if (thisCell.tile.color == '#08D508') // area 1 <-> 4
@@ -1499,6 +1510,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 tile.is_start                   = (x == $scope.startTile.x && y == $scope.startTile.y);
                 tile.half_wall_tokens           = thisCell.tile.halfWallVic;
                 tile.half_wall_tokens_front_rot = thisCell.tile.halfWallVicRots.map(Number).map(degreesToRadians);
+                tile.half_wall_tokens_fakes     = thisCell.tile.halfWallVicFakes;
                 tile.floor_color                = floorColor;
                 tile.room_number                = checkRoomNumber(x,y,0);
             }
@@ -1566,13 +1578,17 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         `;
 
 
-        function visualHumanPart({x, z, rot, frontRotation, id, type, score}) {
+        function visualHumanPart({x, z, rot, frontRotation, is_fake, id, type, score}) {
             r = calculateWallTokenRot(rot, frontRotation)
+            name = "Victim"
+            if (is_fake) {
+                name = "Fake"
+            }
             return `
-            Victim {
+            ${name} {
                 translation ${x} 0 ${z}
                 rotation ${r.x} ${r.y} ${r.z} ${r.angle}
-                name "Victim${id}"
+                name "${name}${id}"
                 type "${type}"
                 scoreWorth ${score}
             }
@@ -1653,6 +1669,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         EXTERNPROTO "../protos/curvedWall.proto"
         EXTERNPROTO "../protos/halfTile.proto"
         EXTERNPROTO "../protos/HazardMap.proto"
+        EXTERNPROTO "../protos/Fake.proto"
         EXTERNPROTO "../protos/obstacle.proto"
         EXTERNPROTO "../protos/Victim.proto"
         EXTERNPROTO "../protos/worldTile.proto"
@@ -1718,7 +1735,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
             [ 0.008,  0.008]
         ]
         //Names of types of visual human
-        let humanTypesVisual = ["harmed", "unharmed", "stable"]
+        let humanTypesVisual = ["phi", "omega", "psi"]
         //Names of types of hazards
         let hazardTypes = ["F", "P", "C", "O"]
 
@@ -2051,6 +2068,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                             z: humanPos[1],
                             rot: humanRot,
                             frontRotation: tile.wall_token_front_rot,
+                            is_fake: tile.wall_token_is_fake,
                             id: hazardId,
                             type: hazardTypes[tile.wall_token_type - 5],
                             score: score
@@ -2066,6 +2084,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                             z: humanPos[1],
                             rot: humanRot,
                             frontRotation: tile.wall_token_front_rot,
+                            is_fake: tile.wall_token_is_fake,
                             id: humanId,
                             type: humanTypesVisual[tile.wall_token_type - 1],
                             score: score
@@ -2079,6 +2098,10 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                             let humanType = Number(tile.half_wall_tokens[i]);
                             let humanPos = [(x * 0.3 * tileScale[0]) + startX , (z * 0.3 * tileScale[2]) + startZ]
                             let humanFrontRotation = tile.half_wall_tokens_front_rot[i];
+                            console.log("Fakes: ", tile.half_wall_tokens_fakes);
+                            let humanIsFake        = tile.half_wall_tokens_fakes[i];
+                            console.log("humanIsFake: ", humanIsFake);
+                            console.log("i: ", i);
                             if (humanFrontRotation === undefined) humanFrontRotation = 0;
                             let score = 30
                             if(tile.is_linear) score = 10
@@ -2112,6 +2135,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
                                         rot: humanRotationCurve[curveDir],
                                         frontRotation: humanFrontRotation,
+                                        is_fake: humanIsFake,
                                         id: humanId,
                                         type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
                                         score: score
@@ -2124,6 +2148,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
                                         rot: humanRotationCurve[curveDir],
                                         frontRotation: humanFrontRotation,
+                                        is_fake: humanIsFake,
                                         id: hazardId,
                                         type: hazardTypes[tile.half_wall_tokens[i] - 5],
                                         score: score
@@ -2140,6 +2165,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
                                         rot: humanRotation[i % 4],
                                         frontRotation: humanFrontRotation,
+                                        is_fake: humanIsFake,
                                         id: humanId,
                                         type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
                                         score: score
@@ -2152,6 +2178,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
                                         rot: humanRotation[i % 4],
                                         frontRotation: humanFrontRotation,
+                                        is_fake: humanIsFake,
                                         id: hazardId,
                                         type: hazardTypes[tile.half_wall_tokens[i] - 5],
                                         score: score
@@ -2595,7 +2622,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
     function createArea4Victims(startHumanId, startHazardId) {
         let outputStrVic = "";
         let outputStrHaz = "";
-        const scoringElem = ["harmed", "stable", "unharmed", "P", "O", "F", "C"];
+        const scoringElem = ["phi", "psi", "omega", "P", "O", "F", "C"];
         
         // let src = cv.imread(imgElement);
         /*let context = $scope.room4CanvasSave.getContext('2d');
