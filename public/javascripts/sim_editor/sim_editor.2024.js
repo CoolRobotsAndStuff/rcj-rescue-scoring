@@ -2734,18 +2734,23 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 rand = $scope.room4VicTypes[x];
             }
             if (rand <= 2) { // victim
+                is_fake = Math.random() < 0.3;
+                if (DISABLE_RANDOMNESS) is_fake = false;
+
+                name = "Victim"
+                if (is_fake) name = "Fake"
+                outputStrVic += 
+                name + ` {
+                    translation `;
+                outputStrVic += vicX.toString() + ' 0 ' + vicY.toString();
                 outputStrVic += `
-                    Victim {
-                        translation `;
-                    outputStrVic += vicX.toString() + ' 0 ' + vicY.toString();
-                    outputStrVic += `
-                        rotation ${finalAngles.x} ${finalAngles.y} ${finalAngles.z} ${finalAngles.angle}`;
-                    outputStrVic += `
-                        name "Victim` + startHumanId.toString() + `"
-                        type "` + scoringElem[rand] + `"
-                        scoreWorth 15
-                    }
-                    `;
+                    rotation ${finalAngles.x} ${finalAngles.y} ${finalAngles.z} ${finalAngles.angle}`;
+                outputStrVic += `
+                    name "` + name + startHumanId.toString() + `"
+                    type "` + scoringElem[rand] + `"
+                    scoreWorth 15
+                }
+                `;
                 startHumanId += 1;
             } else { // hazard
                 outputStrHaz += `
