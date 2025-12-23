@@ -17,7 +17,7 @@
  *  should get you to the section of about quaternions.
  */
 
-DISABLE_RANDOMNESS = true
+DISABLE_RANDOMNESS = false
 
 // register the directive with your app module
 var app = angular.module('SimEditor', ['ngTouch','ngAnimate', 'ui.bootstrap', 'pascalprecht.translate', 'ngCookies']);
@@ -1735,7 +1735,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
             [ 0.008,  0.008]
         ]
         //Names of types of visual human
-        let humanTypesVisual = ["phi", "omega", "psi"]
+        let humanTypesVisual = ["harmed", "unharmed", "stable"]
         //Names of types of hazards
         let hazardTypes = ["F", "P", "C", "O"]
 
@@ -2622,7 +2622,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
     function createArea4Victims(startHumanId, startHazardId) {
         let outputStrVic = "";
         let outputStrHaz = "";
-        const scoringElem = ["phi", "psi", "omega", "P", "O", "F", "C"];
+        const scoringElem = ["harmed", "stable", "unharmed", "P", "O", "F", "C"];
         
         // let src = cv.imread(imgElement);
         /*let context = $scope.room4CanvasSave.getContext('2d');
