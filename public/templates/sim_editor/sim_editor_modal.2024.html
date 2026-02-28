@@ -57,31 +57,26 @@
       <th>Ψ</th>
       <th>Ω</th>
       <th><img src="/images/placard-2-flammable-gas.png" alt="None" height="20"></th>
-      <th><img src="/images/placard-6-poison.png" alt="None" height="20"></th>
-      <th><img src="/images/placard-8-corrosive.png" alt="None" height="20"></th>
-      <th><img src="/images/placard-5.2-organic-peroxide.png" alt="None" height="20"></th>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.top" | translate}}</th>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="None" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="None" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
+      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="H" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
+      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="S" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
+      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="U" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
+        <td style="white-space: nowrap">
+          <input type="text" ng-model="cell.tile.cognitives.top_code" maxlength="5" ng-pattern="/^[IJKL]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters I,J,K,L (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+        </td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.bottom" | translate}}</th>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="None" style="display: block;" ng-click="cell.tile.victims={}"></td>
+      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="None" style="display: block;"  ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+        <td style="white-space: nowrap">
+          <input type="text" ng-model="cell.tile.cognitives.bottom_code" maxlength="5" ng-pattern="/^[IJKL]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters I,J,K,L (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+        </td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.left" | translate}}</th>
@@ -89,10 +84,9 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+        <td style="white-space: nowrap">
+          <input type="text" ng-model="cell.tile.cognitives.left_code" maxlength="5" ng-pattern="/^[IJKL]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters I,J,K,L (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+        </td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.right" | translate}}</th>
@@ -100,10 +94,9 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+        <td style="white-space: nowrap">
+          <input type="text" ng-model="cell.tile.cognitives.right_code" maxlength="5" ng-pattern="/^[IJKL]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters I,J,K,L (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+        </td>
     </tr>
   </table>
   
@@ -180,20 +173,10 @@
         <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="2" style="display: block;"> </td>
       </tr>
       <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-2-flammable-gas.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="5" style="display: block;"> </td>
-      </tr>
-      <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-6-poison.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="6" style="display: block;"> </td>
-      </tr>
-      <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-8-corrosive.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="7" style="display: block;"> </td>
-      </tr>
-      <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-5.2-organic-peroxide.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="8" style="display: block;"> </td>
+        <th style="width: var(--row-with)">{{"admin.simMapEditor.cognitives" | translate}}</th>
+        <td ng-repeat="c in range(16)">
+          <input type="text" ng-model="cell.tile.halfWallCognitives[c]" maxlength="5" ng-pattern="/^[IJKL]{5}$/" placeholder="IIIII" style="width: 100%; display: block;" title="Only letters I,J,K,L (uppercase), exactly 5 characters">
+        </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)"><img src="/images/no_victims.png" alt="None" height="20"/></th>

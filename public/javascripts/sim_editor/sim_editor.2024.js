@@ -1746,6 +1746,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         let goalId     = 0
         let swampId    = 0
         let humanId    = 0
+        let fakeHumanId    = 0
         let obstacleId = 0
         let hazardId   = 0
 
@@ -1872,6 +1873,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
 
         //String to hold all the humans/hazards
         let allHumans = ""
+        let allFakes = ""
         let allHazards = ""
         for(let x=0;x<$scope.width;x++){
             for(let z=0;z<$scope.length;z++){
@@ -2079,17 +2081,31 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         humanPos[1] = humanPos[1] + humanOffset[tile.wall_token_place][1] + randomOffset[1]
                         let score = 15
                         if(tile.is_linear) score = 5
-                        allHumans = allHumans + visualHumanPart({
-                            x: humanPos[0],
-                            z: humanPos[1],
-                            rot: humanRot,
-                            frontRotation: tile.wall_token_front_rot,
-                            is_fake: tile.wall_token_is_fake,
-                            id: humanId,
-                            type: humanTypesVisual[tile.wall_token_type - 1],
-                            score: score
-                        })
-                        humanId = humanId + 1
+                        if (tile.wall_token_is_fake) {
+                            allFakes = allFakes + visualHumanPart({
+                                x: humanPos[0],
+                                z: humanPos[1],
+                                rot: humanRot,
+                                frontRotation: tile.wall_token_front_rot,
+                                is_fake: tile.wall_token_is_fake,
+                                id: humanId,
+                                type: humanTypesVisual[tile.wall_token_type - 1],
+                                score: score
+                            })
+                            fakeHumanId = fakeHumanId + 1
+                        } else {
+                            allHumans = allHumans + visualHumanPart({
+                                x: humanPos[0],
+                                z: humanPos[1],
+                                rot: humanRot,
+                                frontRotation: tile.wall_token_front_rot,
+                                is_fake: tile.wall_token_is_fake,
+                                id: humanId,
+                                type: humanTypesVisual[tile.wall_token_type - 1],
+                                score: score
+                            })
+                            humanId = humanId + 1
+                        }
                     }
                 }
                 if(tile.half_wall_tokens){
@@ -2130,17 +2146,32 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                     console.log("Z: " + humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside);
                                     score = score / 2;
                                     //allHumans = allHumans + visualHumanPart({x: humanPos[0], z: humanPos[1], rot: humanRotationCurve[curveDir], id: humanId, type: humanTypesVisual[walls[z][x][13][i] - 1], score: score})
-                                    allHumans = allHumans + visualHumanPart({
-                                        x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
-                                        z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
-                                        rot: humanRotationCurve[curveDir],
-                                        frontRotation: humanFrontRotation,
-                                        is_fake: humanIsFake,
-                                        id: humanId,
-                                        type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
-                                        score: score
-                                    })
-                                    humanId = humanId + 1
+                                    if (humanIsFake) {
+                                        allHumans = allHumans + visualHumanPart({
+                                            x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
+                                            z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
+                                            rot: humanRotationCurve[curveDir],
+                                            frontRotation: humanFrontRotation,
+                                            is_fake: humanIsFake,
+                                            id: humanId,
+                                            type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
+                                            score: score
+                                        })
+                                        fakeHumanId = fakeHumanId + 1
+
+                                    } else {
+                                        allHumans = allHumans + visualHumanPart({
+                                            x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
+                                            z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
+                                            rot: humanRotationCurve[curveDir],
+                                            frontRotation: humanFrontRotation,
+                                            is_fake: humanIsFake,
+                                            id: humanId,
+                                            type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
+                                            score: score
+                                        })
+                                        humanId = humanId + 1
+                                    }
                                 }
                                 else if (humanType>= 5 && humanType <= 8) { // is hazmat sign
                                     allHazards = allHazards + hazardPart({
@@ -2319,6 +2350,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         fileData = fileData + groupPart({data: allSwampBounds,      name: "SWAMPBOUNDS"})
         fileData = fileData + groupPart({data: allObstacles,        name: "OBSTACLES"})
         fileData = fileData + groupPart({data: allHumans,           name: "HUMANGROUP"})
+        fileData = fileData + groupPart({data: allFakes,            name: "FAKEGROUP"})
         fileData = fileData + groupPart({data: allHazards,          name: "HAZARDGROUP"})
         fileData = fileData + supervisorPart({time: $scope.time})
         return fileData

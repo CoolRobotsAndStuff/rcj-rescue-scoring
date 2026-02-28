@@ -924,6 +924,7 @@
             "placement" : "Placement of victims:",
             "victimRotation": "Victim orientation:",
             "victimIsFake": "Victim is fake:",
+            "cognitives": "Cognitives",
             "export": "@:admin.lineMapEditor.export",
             "import": "@:admin.lineMapEditor.import",
             "exportW": "Export this map as a world file for Erebus",
