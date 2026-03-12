@@ -3064,6 +3064,14 @@ app.controller('ModalInstanceCtrl',['$scope', '$uibModalInstance', 'x', 'y', 'z'
        $scope.$parent.recalculateLinear();
     }
 
+    $scope.victimTextChanged = function (side) {
+        // Keep only the active text box, clear the others and radio selections
+        var v = $scope.cell.tile.victims || {};
+        var newVictims = {};
+        newVictims[side + 'Text'] = v[side + 'Text'];
+        $scope.cell.tile.victims = newVictims;
+    }
+
      $scope.isHalfWall = function(r, c) {
         var ind = -1, tmp = r * 10 + c;
         if (tmp == 12) ind = 0;

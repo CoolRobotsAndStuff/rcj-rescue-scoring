@@ -56,10 +56,7 @@
       <th>Φ</th>
       <th>Ψ</th>
       <th>Ω</th>
-      <th><img src="/images/placard-2-flammable-gas.png" alt="None" height="20"></th>
-      <th><img src="/images/placard-6-poison.png" alt="None" height="20"></th>
-      <th><img src="/images/placard-8-corrosive.png" alt="None" height="20"></th>
-      <th><img src="/images/placard-5.2-organic-peroxide.png" alt="None" height="20"></th>
+      <th colspan="4">Cog Targ</th>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.top" | translate}}</th>
@@ -67,10 +64,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.topText" ng-change="victimTextChanged('top')" style="width: 80px;"></td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.bottom" | translate}}</th>
@@ -78,10 +72,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.bottomText" ng-change="victimTextChanged('bottom')" style="width: 80px;"></td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.left" | translate}}</th>
@@ -89,10 +80,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.leftText" ng-change="victimTextChanged('left')" style="width: 80px;"></td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.right" | translate}}</th>
@@ -100,10 +88,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="F" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="P" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="C" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="O" style="display: block;" ng-click="cell.tile.victims={}"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.rightText" ng-change="victimTextChanged('right')" style="width: 80px;"></td>
     </tr>
   </table>
   
