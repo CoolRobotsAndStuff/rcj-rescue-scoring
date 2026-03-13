@@ -64,7 +64,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td colspan="4"><input type="text" ng-model="cell.tile.victims.topText" ng-change="victimTextChanged('top')" style="width: 80px;"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.topText" ng-change="victimTextChanged('top')" ng-keypress="allowedVictimKey($event)" style="width: 80px;" pattern="[KRGYBkrgyb]*" title="Only letters K, R, G, Y, B allowed"></td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.bottom" | translate}}</th>
@@ -72,7 +72,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td colspan="4"><input type="text" ng-model="cell.tile.victims.bottomText" ng-change="victimTextChanged('bottom')" style="width: 80px;"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.bottomText" ng-change="victimTextChanged('bottom')" ng-keypress="allowedVictimKey($event)" style="width: 80px;" pattern="[KRGYBkrgyb]*" title="Only letters K, R, G, Y, B allowed"></td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.left" | translate}}</th>
@@ -80,7 +80,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td colspan="4"><input type="text" ng-model="cell.tile.victims.leftText" ng-change="victimTextChanged('left')" style="width: 80px;"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.leftText" ng-change="victimTextChanged('left')" ng-keypress="allowedVictimKey($event)" style="width: 80px;" pattern="[KRGYBkrgyb]*" title="Only letters K, R, G, Y, B allowed"></td>
     </tr>
     <tr align="center">
       <th>{{"admin.simMapEditor.right" | translate}}</th>
@@ -88,7 +88,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="H" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
-      <td colspan="4"><input type="text" ng-model="cell.tile.victims.rightText" ng-change="victimTextChanged('right')" style="width: 80px;"></td>
+      <td colspan="4"><input type="text" ng-model="cell.tile.victims.rightText" ng-change="victimTextChanged('right')" ng-keypress="allowedVictimKey($event)" style="width: 80px;" pattern="[KRGYBkrgyb]*" title="Only letters K, R, G, Y, B allowed"></td>
     </tr>
   </table>
   
@@ -154,35 +154,25 @@
       </tr>
       <tr>
         <th style="width: var(--row-with)">Φ</th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="1" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="1" style="display: block;" ng-click="cell.tile.halfWallCogTarg[c]=undefined"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">Ψ</th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="3" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="3" style="display: block;" ng-click="cell.tile.halfWallCogTarg[c]=undefined"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">Ω</th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="2" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="2" style="display: block;" ng-click="cell.tile.halfWallCogTarg[c]=undefined"> </td>
       </tr>
       <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-2-flammable-gas.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="5" style="display: block;"> </td>
-      </tr>
-      <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-6-poison.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="6" style="display: block;"> </td>
-      </tr>
-      <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-8-corrosive.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="7" style="display: block;"> </td>
-      </tr>
-      <tr>
-        <th style="width: var(--row-with)"><img src="/images/placard-5.2-organic-peroxide.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="8" style="display: block;"> </td>
+        <th style="width: var(--row-with)">Cog Targ</th>
+        <td height="50%" ng-repeat="c in range(16)">
+          <input type="text" ng-model="cell.tile.halfWallCogTarg[c]" ng-keypress="allowedVictimKey($event)" ng-change="halfWallCogTargChanged(c)" maxlength="5" style="width: 100%; display: block;" pattern="[KRGYBkrgyb]*" title="Only letters K, R, G, Y, B (max 5)">
+        </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)"><img src="/images/no_victims.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="" style="display: block;" ng-click="cell.tile.halfWallCogTarg[c]=undefined"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">{{"admin.simMapEditor.victimRotation" | translate}}</th>

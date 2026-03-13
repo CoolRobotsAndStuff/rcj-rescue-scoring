@@ -221,6 +221,8 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     $scope.cells[index].tile.halfWallVicRots = [];
                 if(!$scope.cells[index].tile.halfWallVicFakes)
                     $scope.cells[index].tile.halfWallVicFakes = [];
+                if(!$scope.cells[index].tile.halfWallCogTarg)
+                    $scope.cells[index].tile.halfWallCogTarg = [];
             }
         }
         
@@ -3067,9 +3069,25 @@ app.controller('ModalInstanceCtrl',['$scope', '$uibModalInstance', 'x', 'y', 'z'
     $scope.victimTextChanged = function (side) {
         // Keep only the active text box, clear the others and radio selections
         var v = $scope.cell.tile.victims || {};
+        var raw = (v[side + 'Text'] || '').toUpperCase().replace(/[^KRGYB]/g, '');
         var newVictims = {};
-        newVictims[side + 'Text'] = v[side + 'Text'];
+        newVictims[side + 'Text'] = raw;
         $scope.cell.tile.victims = newVictims;
+    }
+
+    $scope.allowedVictimKey = function ($event) {
+        var char = String.fromCharCode($event.charCode).toUpperCase();
+        if (char && !/^[KRGYB]$/.test(char)) {
+            $event.preventDefault();
+        }
+    }
+
+    $scope.halfWallCogTargChanged = function (c) {
+        var val = ($scope.cell.tile.halfWallCogTarg[c] || '').toUpperCase().replace(/[^KRGYB]/g, '');
+        $scope.cell.tile.halfWallCogTarg[c] = val;
+        if (val) {
+            $scope.cell.tile.halfWallVic[c] = '';
+        }
     }
 
      $scope.isHalfWall = function(r, c) {
