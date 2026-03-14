@@ -1,0 +1,7 @@
+- Imagen de "C" en el generador de mapas cuando se pone un coginitive target. Donde está la lógica para dibujar las letras en el map generator.
+- Victim is fake se desactiva si es cognitive
+- Que pasa con menos de 5 letras? solo permitir 0 o 5? rellenar con Yello (que vale 0?)
+- TODO: Room 4 cognitives
+
+
+

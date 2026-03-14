@@ -1330,6 +1330,27 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
             case 'O'   : return HUMAN_O;
         } 
     }
+    
+    function cognitive_string_to_hazmat(str) {
+        let sum = 0
+        for (const c of str) {
+            switch (c) {
+            case 'K': sum += -2; break;
+            case 'R': sum += -1; break;
+            case 'Y': sum += 0; break;
+            case 'G': sum += 1; break;
+            case 'B': sum += 2; break;
+            }
+        }
+        console.log("sum = ", sum)
+
+        switch (sum) {
+        case 0: return HUMAN_F;
+        case 1: return HUMAN_P;
+        case 2: return HUMAN_C;
+        case 3: return HUMAN_O;
+        }
+    }
 
     // tag tile typedef
     /**
@@ -1379,14 +1400,17 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     wall_token_place           : 0,
                     wall_token_front_rot       : 0,
                     wall_token_is_fake         : false,
+                    wall_token_cognitive_code  : '',
 
                     inner_half_walls           : '',
                     outer_half_walls           : '',
                     outer_half_walls_info      : 0,
                     curved_walls               : '',
                     half_wall_tokens           : [],
+                    half_wall_cognitives       : [''],
                     half_wall_tokens_front_rot : [],
                     half_wall_tokens_fakes     : [],
+                    half_wall_tokens_cognitive_codes : [],
 
                     floor_color                : '',
                     room_number                : 0,
@@ -1469,7 +1493,28 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         tile.wall_token_place = HUMAN_PLACE_LEFT;
                     }
                 }
-                
+                if (thisCell.tile.cognitives) {
+                    if (thisCell.tile.cognitives.top_code) {
+                        tile.wall_token_cognitive_code = thisCell.tile.cognitives.top_code
+                        tile.wall_token_type = cognitive_string_to_hazmat(thisCell.tile.cognitives.top_code);
+                        tile.wall_token_place = HUMAN_PLACE_TOP
+                    } else if (thisCell.tile.cognitives.right_code) {
+                        tile.wall_token_cognitive_code = thisCell.tile.cognitives.right_code
+                        tile.wall_token_type = cognitive_string_to_hazmat(thisCell.tile.cognitives.right_code);
+                        tile.wall_token_place = HUMAN_PLACE_RIGHT
+                    } else if (thisCell.tile.cognitives.bottom_code){
+                        tile.wall_token_cognitive_code = thisCell.tile.cognitives.bottom_code
+                        tile.wall_token_type = cognitive_string_to_hazmat(thisCell.tile.cognitives.bottom_code);
+                        tile.wall_token_place = HUMAN_PLACE_BOTTOM;
+                    } else if (thisCell.tile.cognitives.left_code){
+                        tile.wall_token_cognitive_code = thisCell.tile.cognitives.left_code
+                        tile.wall_token_type = cognitive_string_to_hazmat(thisCell.tile.cognitives.left_code);
+                        tile.wall_token_place = HUMAN_PLACE_LEFT;
+                    } else {
+                        console.log("")
+                    }
+                }
+
                 /**
                  * @param {number} d
                  * @returns {number}
@@ -1509,6 +1554,29 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 tile.is_linear                  = is_truthy(thisCell.isLinear);
                 tile.is_start                   = (x == $scope.startTile.x && y == $scope.startTile.y);
                 tile.half_wall_tokens           = thisCell.tile.halfWallVic;
+                function object_as_array(obj) {
+                    const maxIndex = Math.max(...Object.keys(obj));
+                    const array = new Array(maxIndex + 1);
+                    Object.keys(obj).forEach(key => {
+                        array[key] = obj[key];
+                    });
+                    return array;
+                }
+                if (thisCell.tile.halfWallCognitives) {
+                    tile.half_wall_tokens_cognitive_codes = object_as_array(thisCell.tile.halfWallCognitives) 
+                }
+                if (tile.half_wall_tokens.length == 0 && thisCell.tile.halfWallCognitives) {
+                    console.log("HIIII");
+                    for (let i = 0; i < tile.half_wall_tokens_cognitive_codes.length; i++) {
+                        console.log("converting: ", tile.half_wall_tokens_cognitive_codes[i])
+                        if (tile.half_wall_tokens_cognitive_codes[i]) {
+                            tile.half_wall_tokens.push(cognitive_string_to_hazmat(tile.half_wall_tokens_cognitive_codes[i])) 
+                        }
+                    }
+                    console.log("half wall tokens: ", tile.half_wall_tokens)
+                } else {
+                    console.log("nothing")
+                }
                 tile.half_wall_tokens_front_rot = thisCell.tile.halfWallVicRots.map(Number).map(degreesToRadians);
                 tile.half_wall_tokens_fakes     = thisCell.tile.halfWallVicFakes;
                 tile.floor_color                = floorColor;
@@ -1598,7 +1666,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         function hazardPart({x, z, rot, frontRotation, id, type, score}) {
             r = calculateWallTokenRot(rot, frontRotation)
             return `
-            HazardMap {
+            Cognitive {
                 translation ${x} 0 ${z}
                 rotation ${r.x} ${r.y} ${r.z} ${r.angle}
                 name "Hazard${id}"
@@ -2072,7 +2140,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                             frontRotation: tile.wall_token_front_rot,
                             is_fake: tile.wall_token_is_fake,
                             id: hazardId,
-                            type: hazardTypes[tile.wall_token_type - 5],
+                            type: tile.wall_token_cognitive_code,
                             score: score
                         })
                         hazardId = hazardId + 1
@@ -2181,7 +2249,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         frontRotation: humanFrontRotation,
                                         is_fake: humanIsFake,
                                         id: hazardId,
-                                        type: hazardTypes[tile.half_wall_tokens[i] - 5],
+                                        type: tile.half_wall_tokens_cognitive_codes[i],
                                         score: score
                                     })
                                     hazardId = hazardId + 1
@@ -2211,7 +2279,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         frontRotation: humanFrontRotation,
                                         is_fake: humanIsFake,
                                         id: hazardId,
-                                        type: hazardTypes[tile.half_wall_tokens[i] - 5],
+                                        type: tile.half_wall_tokens_cognitive_codes[i],
                                         score: score
                                     })
                                     hazardId = hazardId + 1
@@ -2336,7 +2404,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         type: area4Hazards[i].type,
                         score: area4Hazards[i].score,
                     }
-                    allHazards += hazardPart(thisHazard)
+                    allHazards += hazardPart(thisHazard) // TODO: Room 4 hazard part
                     hazardId += 1
                 }
             }
@@ -2351,7 +2419,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         fileData = fileData + groupPart({data: allObstacles,        name: "OBSTACLES"})
         fileData = fileData + groupPart({data: allHumans,           name: "HUMANGROUP"})
         fileData = fileData + groupPart({data: allFakes,            name: "FAKEGROUP"})
-        fileData = fileData + groupPart({data: allHazards,          name: "HAZARDGROUP"})
+        fileData = fileData + groupPart({data: allHazards,          name: "COGNITIVEGROUP"})
         fileData = fileData + supervisorPart({time: $scope.time})
         return fileData
 
@@ -2796,7 +2864,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         type "` + scoringElem[rand] + `"
                         scoreWorth 30
                     }
-                    `;
+                    `; // TODO: cognitives
                 startHazardId += 1;
             }
 
