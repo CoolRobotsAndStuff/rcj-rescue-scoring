@@ -1666,7 +1666,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         function hazardPart({x, z, rot, frontRotation, id, type, score}) {
             r = calculateWallTokenRot(rot, frontRotation)
             return `
-            Cognitive {
+            CognitiveTarget {
                 translation ${x} 0 ${z}
                 rotation ${r.x} ${r.y} ${r.z} ${r.angle}
                 name "Hazard${id}"
@@ -1736,6 +1736,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         EXTERNPROTO "../protos/TexturedBackground.proto"
         EXTERNPROTO "../protos/curvedWall.proto"
         EXTERNPROTO "../protos/halfTile.proto"
+        EXTERNPROTO "../protos/CognitiveTarget.proto"
         EXTERNPROTO "../protos/HazardMap.proto"
         EXTERNPROTO "../protos/Fake.proto"
         EXTERNPROTO "../protos/obstacle.proto"
@@ -2418,8 +2419,8 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         fileData = fileData + groupPart({data: allSwampBounds,      name: "SWAMPBOUNDS"})
         fileData = fileData + groupPart({data: allObstacles,        name: "OBSTACLES"})
         fileData = fileData + groupPart({data: allHumans,           name: "HUMANGROUP"})
-        fileData = fileData + groupPart({data: allFakes,            name: "FAKEGROUP"})
-        fileData = fileData + groupPart({data: allHazards,          name: "COGNITIVEGROUP"})
+        fileData = fileData + groupPart({data: allFakes,            name: "FAKES"})
+        fileData = fileData + groupPart({data: allHazards,          name: "TARGETGROUP"})
         fileData = fileData + supervisorPart({time: $scope.time})
         return fileData
 
