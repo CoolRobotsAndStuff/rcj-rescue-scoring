@@ -1556,23 +1556,29 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 tile.is_linear                  = is_truthy(thisCell.isLinear);
                 tile.is_start                   = (x == $scope.startTile.x && y == $scope.startTile.y);
 
-                arr1 = thisCell.tile.halfWallVic
-                arr2 = tile.half_wall_tokens_cognitive_codes.map(cognitive_string_to_hazmat)
+                tile.half_wall_tokens_cognitive_codes = thisCell.tile.halfWallCognitives
 
+                arr2 = tile.half_wall_tokens_cognitive_codes
+                arr1 = thisCell.tile.halfWallVic
                 tile.half_wall_tokens = []
+
+                console.log("half_wall_tokens_cognitive_codes", tile.half_wall_tokens_cognitive_codes)
+                console.log("arr1", arr1)
+                console.log("arr2", arr2)
 
                 for (let i = 0; i < Math.max(arr1.length, arr2.length); i++) {
                     if (arr1[i]) {
                         tile.half_wall_tokens.push(arr1[i])
                     } else if (arr2[i]) {
-                        tile.half_wall_tokens.push(arr2[i])
+                        tile.half_wall_tokens.push(cognitive_string_to_hazmat(arr2[i]))
                     } else {
                         tile.half_wall_tokens.push(undefined)
                     }
                 }
+
+                console.log(tile.half_wall_tokens)
                 //tile.half_wall_tokens           = 
 
-                tile.half_wall_tokens_cognitive_codes = 
                 tile.half_wall_tokens_front_rot = thisCell.tile.halfWallVicRots.map(Number).map(degreesToRadians);
                 tile.half_wall_tokens_fakes     = thisCell.tile.halfWallVicFakes;
                 tile.floor_color                = floorColor;
