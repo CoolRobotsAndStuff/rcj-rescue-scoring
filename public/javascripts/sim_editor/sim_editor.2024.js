@@ -1555,10 +1555,24 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 tile.is_obstacle                = is_truthy(thisCell.tile.obstacle);
                 tile.is_linear                  = is_truthy(thisCell.isLinear);
                 tile.is_start                   = (x == $scope.startTile.x && y == $scope.startTile.y);
-                tile.half_wall_tokens           = thisCell.tile.halfWallVic;
-                tile.half_wall_tokens_cognitive_codes = thisCell.tile.halfWallCognitives
-                tile.half_wall_tokens = tile.half_wall_tokens_cognitive_codes.map(cognitive_string_to_hazmat)
-                console.log("half wall tokens: ", tile.half_wall_tokens)
+
+                arr1 = thisCell.tile.halfWallVic
+                arr2 = tile.half_wall_tokens_cognitive_codes.map(cognitive_string_to_hazmat)
+
+                tile.half_wall_tokens = []
+
+                for (let i = 0; i < Math.max(arr1.length, arr2.length); i++) {
+                    if (arr1[i]) {
+                        tile.half_wall_tokens.push(arr1[i])
+                    } else if (arr2[i]) {
+                        tile.half_wall_tokens.push(arr2[i])
+                    } else {
+                        tile.half_wall_tokens.push(undefined)
+                    }
+                }
+                //tile.half_wall_tokens           = 
+
+                tile.half_wall_tokens_cognitive_codes = 
                 tile.half_wall_tokens_front_rot = thisCell.tile.halfWallVicRots.map(Number).map(degreesToRadians);
                 tile.half_wall_tokens_fakes     = thisCell.tile.halfWallVicFakes;
                 tile.floor_color                = floorColor;
@@ -1628,11 +1642,21 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         `;
 
 
+        function hsu_to_greek_letters(hsu) {
+            switch(hsu) {
+                case "harmed": return "phi"
+                case "stable": return  "psi"
+                case "unharmed": return "omega"
+            }
+            console.log("UNREACHABLE: invalid victim name")
+        }
+
         function visualHumanPart({x, z, rot, frontRotation, is_fake, id, type, score}) {
             r = calculateWallTokenRot(rot, frontRotation)
             name = "Victim"
             if (is_fake) {
                 name = "Fake"
+                type = hsu_to_greek_letters(type)
             }
             return `
             ${name} {
@@ -2223,8 +2247,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         })
                                         humanId = humanId + 1
                                     }
-                                }
-                                else if (humanType>= 5 && humanType <= 8) { // is hazmat sign
+                                } else if (humanType>= 5 && humanType <= 8) { // is hazmat sign
                                     allHazards = allHazards + hazardPart({
                                         x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
                                         z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
