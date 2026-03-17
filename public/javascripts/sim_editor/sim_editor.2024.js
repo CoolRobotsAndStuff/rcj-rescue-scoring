@@ -221,6 +221,8 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     $scope.cells[index].tile.halfWallVicRots = [];
                 if(!$scope.cells[index].tile.halfWallVicFakes)
                     $scope.cells[index].tile.halfWallVicFakes = [];
+                if(!$scope.cells[index].tile.halfWallCognitives)
+                    $scope.cells[index].tile.halfWallCognitives = [];
             }
         }
         
@@ -1554,29 +1556,14 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 tile.is_linear                  = is_truthy(thisCell.isLinear);
                 tile.is_start                   = (x == $scope.startTile.x && y == $scope.startTile.y);
                 tile.half_wall_tokens           = thisCell.tile.halfWallVic;
-                function object_as_array(obj) {
-                    const maxIndex = Math.max(...Object.keys(obj));
-                    const array = new Array(maxIndex + 1);
-                    Object.keys(obj).forEach(key => {
-                        array[key] = obj[key];
-                    });
-                    return array;
-                }
-                if (thisCell.tile.halfWallCognitives) {
-                    tile.half_wall_tokens_cognitive_codes = object_as_array(thisCell.tile.halfWallCognitives) 
-                }
-                if (tile.half_wall_tokens.length == 0 && thisCell.tile.halfWallCognitives) {
-                    console.log("HIIII");
-                    for (let i = 0; i < tile.half_wall_tokens_cognitive_codes.length; i++) {
-                        console.log("converting: ", tile.half_wall_tokens_cognitive_codes[i])
-                        if (tile.half_wall_tokens_cognitive_codes[i]) {
-                            tile.half_wall_tokens.push(cognitive_string_to_hazmat(tile.half_wall_tokens_cognitive_codes[i])) 
-                        }
+                tile.half_wall_tokens_cognitive_codes = thisCell.tile.halfWallCognitives
+                for (let i = 0; i < tile.half_wall_tokens_cognitive_codes.length; i++) {
+                    console.log("converting: ", tile.half_wall_tokens_cognitive_codes[i])
+                    if (tile.half_wall_tokens_cognitive_codes[i]) {
+                        tile.half_wall_tokens.push(cognitive_string_to_hazmat(tile.half_wall_tokens_cognitive_codes[i])) 
                     }
-                    console.log("half wall tokens: ", tile.half_wall_tokens)
-                } else {
-                    console.log("nothing")
                 }
+                console.log("half wall tokens: ", tile.half_wall_tokens)
                 tile.half_wall_tokens_front_rot = thisCell.tile.halfWallVicRots.map(Number).map(degreesToRadians);
                 tile.half_wall_tokens_fakes     = thisCell.tile.halfWallVicFakes;
                 tile.floor_color                = floorColor;
