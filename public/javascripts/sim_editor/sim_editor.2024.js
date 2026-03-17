@@ -1557,12 +1557,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 tile.is_start                   = (x == $scope.startTile.x && y == $scope.startTile.y);
                 tile.half_wall_tokens           = thisCell.tile.halfWallVic;
                 tile.half_wall_tokens_cognitive_codes = thisCell.tile.halfWallCognitives
-                for (let i = 0; i < tile.half_wall_tokens_cognitive_codes.length; i++) {
-                    console.log("converting: ", tile.half_wall_tokens_cognitive_codes[i])
-                    if (tile.half_wall_tokens_cognitive_codes[i]) {
-                        tile.half_wall_tokens.push(cognitive_string_to_hazmat(tile.half_wall_tokens_cognitive_codes[i])) 
-                    }
-                }
+                tile.half_wall_tokens = tile.half_wall_tokens_cognitive_codes.map(cognitive_string_to_hazmat)
                 console.log("half wall tokens: ", tile.half_wall_tokens)
                 tile.half_wall_tokens_front_rot = thisCell.tile.halfWallVicRots.map(Number).map(degreesToRadians);
                 tile.half_wall_tokens_fakes     = thisCell.tile.halfWallVicFakes;
