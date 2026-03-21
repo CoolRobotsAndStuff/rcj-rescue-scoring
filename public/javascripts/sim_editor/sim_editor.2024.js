@@ -3222,6 +3222,21 @@ app.controller('ModalInstanceCtrl',['$scope', '$uibModalInstance', 'x', 'y', 'z'
 
 }]);
 
+app.directive('cognitiveInput', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, element, attrs, ngModel) {
+            element.on('input', function() {
+                var val = (element.val() || '').toUpperCase().replace(/[^KYRGB]/g, '').slice(0, 5);
+                element.val(val);
+                ngModel.$setViewValue(val);
+                scope.$apply();
+            });
+        }
+    };
+});
+
 app.controller('CustomRoom4ModalCtrl',['$scope', '$uibModalInstance', function ($scope, $uibModalInstance){
 
     let canvas;

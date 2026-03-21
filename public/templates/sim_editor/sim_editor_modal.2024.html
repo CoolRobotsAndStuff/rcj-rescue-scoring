@@ -65,7 +65,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="S" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="U" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
         <td style="white-space: nowrap">
-          <input type="text" ng-model="cell.tile.cognitives.top_code" maxlength="5" ng-pattern="/^[KYRGB]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters K,Y,R,G,B (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.top_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
         </td>
     </tr>
     <tr align="center">
@@ -75,7 +75,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
         <td style="white-space: nowrap">
-          <input type="text" ng-model="cell.tile.cognitives.bottom_code" maxlength="5" ng-pattern="/^[KYRGB]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters K,Y,R,G,B (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.bottom_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
         </td>
     </tr>
     <tr align="center">
@@ -85,7 +85,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
         <td style="white-space: nowrap">
-          <input type="text" ng-model="cell.tile.cognitives.left_code" maxlength="5" ng-pattern="/^[KYRGB]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters K,Y,R,G,B (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.left_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
         </td>
     </tr>
     <tr align="center">
@@ -95,7 +95,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="S" style="display: block;" ng-click="cell.tile.victims={}"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="U" style="display: block;" ng-click="cell.tile.victims={}"></td>
         <td style="white-space: nowrap">
-          <input type="text" ng-model="cell.tile.cognitives.right_code" maxlength="5" ng-pattern="/^[KYRGB]{5}$/" placeholder="IIIII" style="display: inline-block; width:8ch" title="Only letters K,Y,R,G,B (uppercase), exactly 5 characters" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.right_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
         </td>
     </tr>
   </table>
@@ -175,7 +175,7 @@
       <tr>
         <th style="width: var(--row-with)">{{"admin.simMapEditor.cognitives" | translate}}</th>
         <td ng-repeat="c in range(16)">
-          <input type="text" ng-model="cell.tile.halfWallCognitives[c]" maxlength="5" ng-pattern="/^[KYRGB]{5}$/" placeholder="IIIII" style="width: 100%; display: block;" title="Only letters K,Y,R,G,B (uppercase), exactly 5 characters">
+          <input type="text" cognitive-input ng-model="cell.tile.halfWallCognitives[c]" maxlength="5" style="width: 100%; display: block;">
         </td>
       </tr>
       <tr>
