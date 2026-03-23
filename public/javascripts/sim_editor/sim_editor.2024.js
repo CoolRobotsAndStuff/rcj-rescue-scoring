@@ -1354,6 +1354,22 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         }
     }
 
+    function cognitiveCodeToVictimLetter(code) {
+        if (!code) return null;
+        let sum = 0;
+        for (const c of code) {
+            switch (c) {
+            case 'K': sum += -2; break;
+            case 'R': sum += -1; break;
+            case 'Y': sum +=  0; break;
+            case 'G': sum +=  1; break;
+            case 'B': sum +=  2; break;
+            }
+        }
+        const map = {0: 'F', 1: 'P', 2: 'C', 3: 'O'};
+        return map[sum] !== undefined ? map[sum] : null;
+    }
+
     // tag tile typedef
     /**
      * @typedef {Object} Tile
@@ -2465,6 +2481,21 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 $scope.cells         = data.cells;
                 $scope.competitionId = competitionId;
 
+                // Sync cognitive codes to cell.tile.victims so score calc picks them up
+                const _cogDirs = ['top', 'right', 'bottom', 'left'];
+                Object.keys($scope.cells).forEach(function(key) {
+                    const _cell = $scope.cells[key];
+                    if (_cell.isTile && _cell.tile && _cell.tile.cognitives) {
+                        _cogDirs.forEach(function(dir) {
+                            const code = _cell.tile.cognitives[dir + '_code'];
+                            if (!code) return;
+                            if (!_cell.tile.victims) _cell.tile.victims = {};
+                            const letter = cognitiveCodeToVictimLetter(code);
+                            if (letter) _cell.tile.victims[dir] = letter;
+                        });
+                    }
+                });
+
                 $scope.startTile         = data.startTile;
                 $scope.numberOfDropTiles = data.numberOfDropTiles;
                 $scope.height            = data.height;
@@ -3016,6 +3047,16 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         }
     };
 
+    $scope.setCognitiveVictim = function(cell, dir, code) {
+        if (!cell.tile.victims) cell.tile.victims = {};
+        const letter = cognitiveCodeToVictimLetter(code);
+        if (letter) {
+            cell.tile.victims[dir] = letter;
+        } else {
+            delete cell.tile.victims[dir];
+        }
+    };
+
     // tag max score
     $scope.openMaxScore = function(){
         let victimScore = 0;
@@ -3232,6 +3273,20 @@ app.directive('cognitiveInput', function() {
                 element.val(val);
                 ngModel.$setViewValue(val);
                 scope.$apply();
+            });
+            element.on('blur', function() {
+                var val = (element.val() || '');
+                if (val.length > 0 && val.length < 5) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Cognitive Target',
+                        text: 'The code must be exactly 5 characters (e.g. KYRGB).',
+                        confirmButtonText: 'OK'
+                    });
+                    element.val('');
+                    ngModel.$setViewValue('');
+                    scope.$apply();
+                }
             });
         }
     };

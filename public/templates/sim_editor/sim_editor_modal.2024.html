@@ -65,7 +65,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="S" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.top" value="U" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
         <td style="white-space: nowrap">
-          <input type="text" cognitive-input ng-model="cell.tile.cognitives.top_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.top_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={}; setCognitiveVictim(cell, 'top', cell.tile.cognitives.top_code)" ng-change="setCognitiveVictim(cell, 'top', cell.tile.cognitives.top_code)">
         </td>
     </tr>
     <tr align="center">
@@ -75,7 +75,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="S" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.bottom" value="U" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
         <td style="white-space: nowrap">
-          <input type="text" cognitive-input ng-model="cell.tile.cognitives.bottom_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.bottom_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={}; setCognitiveVictim(cell, 'bottom', cell.tile.cognitives.bottom_code)" ng-change="setCognitiveVictim(cell, 'bottom', cell.tile.cognitives.bottom_code)">
         </td>
     </tr>
     <tr align="center">
@@ -85,7 +85,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="S" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.left" value="U" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
         <td style="white-space: nowrap">
-          <input type="text" cognitive-input ng-model="cell.tile.cognitives.left_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.left_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={}; setCognitiveVictim(cell, 'left', cell.tile.cognitives.left_code)" ng-change="setCognitiveVictim(cell, 'left', cell.tile.cognitives.left_code)">
         </td>
     </tr>
     <tr align="center">
@@ -95,7 +95,7 @@
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="S" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
       <td><input type="radio" name="victim" ng-model="cell.tile.victims.right" value="U" style="display: block;" ng-click="cell.tile.victims={}; cell.tile.cognitives={};"></td>
         <td style="white-space: nowrap">
-          <input type="text" cognitive-input ng-model="cell.tile.cognitives.right_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={};">
+          <input type="text" cognitive-input ng-model="cell.tile.cognitives.right_code" maxlength="5" style="display: inline-block; width:8ch" ng-click="cell.tile.victims={}; setCognitiveVictim(cell, 'right', cell.tile.cognitives.right_code)" ng-change="setCognitiveVictim(cell, 'right', cell.tile.cognitives.right_code)">
         </td>
     </tr>
   </table>
