@@ -3093,7 +3093,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     <td>${victimScore}</td>
                     <td>${checkpointScore}</td>
                     <td>${exitBonus}</td>
-                    <td>${(victimScore + checkpointScore + exitBonus)}</td>
+                    <td>${1.2*(victimScore + checkpointScore + exitBonus)}</td>
                     <td>${2.2*(victimScore + checkpointScore + exitBonus)}</td>
                 </tbody>
             </table>
