@@ -3057,6 +3057,68 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         }
     };
 
+    function _firstCogLabel(arr, indices) {
+        if (!arr) return '';
+        for (var i = 0; i < indices.length; i++) {
+            var code = arr[indices[i]];
+            if (code && code.length === 5) {
+                var letter = cognitiveCodeToVictimLetter(code);
+                if (letter) return letter;
+            }
+        }
+        return '';
+    }
+
+    function _hasCogCode(arr, indices) {
+        if (!arr) return false;
+        for (var i = 0; i < indices.length; i++) {
+            if (arr[indices[i]] && arr[indices[i]].length > 0) return true;
+        }
+        return false;
+    }
+
+    $scope.cogTopLabel = function(tile) {
+        if (!tile) return '';
+        var direct = tile.cognitives && tile.cognitives.top_code ? (cognitiveCodeToVictimLetter(tile.cognitives.top_code) || '') : '';
+        return direct || _firstCogLabel(tile.halfWallCognitives, [0, 4, 1, 7]);
+    };
+    $scope.cogRightLabel = function(tile) {
+        if (!tile) return '';
+        var direct = tile.cognitives && tile.cognitives.right_code ? (cognitiveCodeToVictimLetter(tile.cognitives.right_code) || '') : '';
+        return direct || _firstCogLabel(tile.halfWallCognitives, [5, 13, 6, 12]);
+    };
+    $scope.cogBottomLabel = function(tile) {
+        if (!tile) return '';
+        var direct = tile.cognitives && tile.cognitives.bottom_code ? (cognitiveCodeToVictimLetter(tile.cognitives.bottom_code) || '') : '';
+        return direct || _firstCogLabel(tile.halfWallCognitives, [10, 14, 9, 15]);
+    };
+    $scope.cogLeftLabel = function(tile) {
+        if (!tile) return '';
+        var direct = tile.cognitives && tile.cognitives.left_code ? (cognitiveCodeToVictimLetter(tile.cognitives.left_code) || '') : '';
+        return direct || _firstCogLabel(tile.halfWallCognitives, [3, 11, 2, 8]);
+    };
+
+    $scope.cogTopIsFake = function(tile) {
+        if (!tile) return false;
+        var hasCode = (tile.cognitives && tile.cognitives.top_code) || _hasCogCode(tile.halfWallCognitives, [0, 4, 1, 7]);
+        return hasCode && !$scope.cogTopLabel(tile);
+    };
+    $scope.cogRightIsFake = function(tile) {
+        if (!tile) return false;
+        var hasCode = (tile.cognitives && tile.cognitives.right_code) || _hasCogCode(tile.halfWallCognitives, [5, 13, 6, 12]);
+        return hasCode && !$scope.cogRightLabel(tile);
+    };
+    $scope.cogBottomIsFake = function(tile) {
+        if (!tile) return false;
+        var hasCode = (tile.cognitives && tile.cognitives.bottom_code) || _hasCogCode(tile.halfWallCognitives, [10, 14, 9, 15]);
+        return hasCode && !$scope.cogBottomLabel(tile);
+    };
+    $scope.cogLeftIsFake = function(tile) {
+        if (!tile) return false;
+        var hasCode = (tile.cognitives && tile.cognitives.left_code) || _hasCogCode(tile.halfWallCognitives, [3, 11, 2, 8]);
+        return hasCode && !$scope.cogLeftLabel(tile);
+    };
+
     // tag max score
     $scope.openMaxScore = function(){
         let victimScore = 0;

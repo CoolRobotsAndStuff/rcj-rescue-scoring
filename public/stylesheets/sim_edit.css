@@ -81,6 +81,20 @@ tr td:nth-child(even) {
     vertical-align: bottom;
 }
 
+.tile-cog-label {
+    position: absolute;
+    z-index: 2;
+    font-size: 13px;
+    font-weight: bold;
+    color: #b35c00;
+    line-height: 1;
+    pointer-events: none;
+}
+.tile-cog-label.cog-top    { top: 1px;    left: 50%; transform: translateX(-50%); }
+.tile-cog-label.cog-bottom { bottom: 1px; left: 50%; transform: translateX(-50%); }
+.tile-cog-label.cog-left   { left: 1px;   top: 50%;  transform: translateY(-50%); }
+.tile-cog-label.cog-right  { right: 1px;  top: 50%;  transform: translateY(-50%); }
+
 .error {
     color: red;
     font-weight: bold;
