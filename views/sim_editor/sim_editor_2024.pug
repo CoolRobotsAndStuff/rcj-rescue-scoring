@@ -80,13 +80,13 @@ block content
                                 .tile-image-container(ng-show="$odd && $parent.$odd")
                                     img.tile-image(ng-src='/images/start.png', ng-show='startTile.x == c && startTile.y == r && startTile.z == z')
 
-                                    span.tile-cog-label.cog-top(ng-show="cells[c+','+r+','+z].tile && cogTopLabel(cells[c+','+r+','+z].tile)", ng-bind="cogTopLabel(cells[c+','+r+','+z].tile)")
+                                    span(ng-show="cells[c+','+r+','+z].tile && cogTopLabel(cells[c+','+r+','+z].tile)", ng-bind="cogTopLabel(cells[c+','+r+','+z].tile)", style="position:absolute;top:1px;left:50%;transform:translateX(-50%);font-size:18px;font-weight:900;color:#b35c00;line-height:1;z-index:2;pointer-events:none;")
                                     img.tile-image(ng-src='/images/cog_top.png',    ng-show="cells[c+','+r+','+z].tile && cogTopIsFake(cells[c+','+r+','+z].tile)")
-                                    span.tile-cog-label.cog-right(ng-show="cells[c+','+r+','+z].tile && cogRightLabel(cells[c+','+r+','+z].tile)", ng-bind="cogRightLabel(cells[c+','+r+','+z].tile)")
+                                    span(ng-show="cells[c+','+r+','+z].tile && cogRightLabel(cells[c+','+r+','+z].tile)", ng-bind="cogRightLabel(cells[c+','+r+','+z].tile)", style="position:absolute;right:1px;top:50%;transform:translateY(-50%);font-size:18px;font-weight:900;color:#b35c00;line-height:1;z-index:2;pointer-events:none;")
                                     img.tile-image(ng-src='/images/cog_right.png',  ng-show="cells[c+','+r+','+z].tile && cogRightIsFake(cells[c+','+r+','+z].tile)")
-                                    span.tile-cog-label.cog-bottom(ng-show="cells[c+','+r+','+z].tile && cogBottomLabel(cells[c+','+r+','+z].tile)", ng-bind="cogBottomLabel(cells[c+','+r+','+z].tile)")
+                                    span(ng-show="cells[c+','+r+','+z].tile && cogBottomLabel(cells[c+','+r+','+z].tile)", ng-bind="cogBottomLabel(cells[c+','+r+','+z].tile)", style="position:absolute;bottom:1px;left:50%;transform:translateX(-50%);font-size:18px;font-weight:900;color:#b35c00;line-height:1;z-index:2;pointer-events:none;")
                                     img.tile-image(ng-src='/images/cog_bottom.png', ng-show="cells[c+','+r+','+z].tile && cogBottomIsFake(cells[c+','+r+','+z].tile)")
-                                    span.tile-cog-label.cog-left(ng-show="cells[c+','+r+','+z].tile && cogLeftLabel(cells[c+','+r+','+z].tile)", ng-bind="cogLeftLabel(cells[c+','+r+','+z].tile)")
+                                    span(ng-show="cells[c+','+r+','+z].tile && cogLeftLabel(cells[c+','+r+','+z].tile)", ng-bind="cogLeftLabel(cells[c+','+r+','+z].tile)", style="position:absolute;left:1px;top:50%;transform:translateY(-50%);font-size:18px;font-weight:900;color:#b35c00;line-height:1;z-index:2;pointer-events:none;")
                                     img.tile-image(ng-src='/images/cog_left.png',   ng-show="cells[c+','+r+','+z].tile && cogLeftIsFake(cells[c+','+r+','+z].tile)")
 
                                     img.tile-image(ng-src='/images/h_top.png', ng-show="cells[c+','+r+','+z].tile.victims.top == 'H' || cells[c+','+r+','+z].tile.halfWallVic[0] == 1 ||  cells[c+','+r+','+z].tile.halfWallVic[4] == 1 || cells[c+','+r+','+z].tile.halfWallVic[1] == 1 || cells[c+','+r+','+z].tile.halfWallVic[7] == 1")

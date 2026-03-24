@@ -84,8 +84,8 @@ tr td:nth-child(even) {
 .tile-cog-label {
     position: absolute;
     z-index: 2;
-    font-size: 13px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 900;
     color: #b35c00;
     line-height: 1;
     pointer-events: none;
