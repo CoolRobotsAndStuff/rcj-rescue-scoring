@@ -1355,7 +1355,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
     }
 
     function cognitiveCodeToVictimLetter(code) {
-        if (!code) return null;
+        if (!code || code.length !== 5) return null;
         let sum = 0;
         for (const c of code) {
             switch (c) {
@@ -2483,16 +2483,28 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
 
                 // Sync cognitive codes to cell.tile.victims so score calc picks them up
                 const _cogDirs = ['top', 'right', 'bottom', 'left'];
+                const _letterToNum = {F: 5, P: 6, C: 7, O: 8};
                 Object.keys($scope.cells).forEach(function(key) {
                     const _cell = $scope.cells[key];
-                    if (_cell.isTile && _cell.tile && _cell.tile.cognitives) {
-                        _cogDirs.forEach(function(dir) {
-                            const code = _cell.tile.cognitives[dir + '_code'];
-                            if (!code) return;
-                            if (!_cell.tile.victims) _cell.tile.victims = {};
-                            const letter = cognitiveCodeToVictimLetter(code);
-                            if (letter) _cell.tile.victims[dir] = letter;
-                        });
+                    if (_cell.isTile && _cell.tile) {
+                        if (_cell.tile.cognitives) {
+                            _cogDirs.forEach(function(dir) {
+                                const code = _cell.tile.cognitives[dir + '_code'];
+                                if (!code) return;
+                                if (!_cell.tile.victims) _cell.tile.victims = {};
+                                const letter = cognitiveCodeToVictimLetter(code);
+                                if (letter) _cell.tile.victims[dir] = letter;
+                            });
+                        }
+                        if (_cell.tile.halfWallCognitives) {
+                            for (var _i = 0; _i < 16; _i++) {
+                                var _code = _cell.tile.halfWallCognitives[_i];
+                                if (!_code || _code.length !== 5) continue;
+                                if (!_cell.tile.halfWallVic) _cell.tile.halfWallVic = [];
+                                var _letter = cognitiveCodeToVictimLetter(_code);
+                                if (_letter) _cell.tile.halfWallVic[_i] = _letterToNum[_letter];
+                            }
+                        }
                     }
                 });
 
@@ -3057,6 +3069,39 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         }
     };
 
+    const _hwLetterToNum = {F: 5, P: 6, C: 7, O: 8};
+
+    $scope.setHalfWallCognitive = function(cell, idx, code) {
+        if (!cell.tile.halfWallVic) cell.tile.halfWallVic = [];
+        const letter = cognitiveCodeToVictimLetter(code);
+        if (letter) {
+            cell.tile.halfWallVic[idx] = _hwLetterToNum[letter];
+        } else {
+            const cur = cell.tile.halfWallVic[idx];
+            if (cur >= 5 && cur <= 8) cell.tile.halfWallVic[idx] = '';
+        }
+    };
+
+    $scope.halfWallCogLabel = function(tile, idx) {
+        if (!tile || !tile.halfWallCognitives) return '';
+        return cognitiveCodeToVictimLetter(tile.halfWallCognitives[idx]) || '';
+    };
+
+    $scope.halfWallCogIsFake = function(tile, idx) {
+        if (!tile || !tile.halfWallCognitives) return false;
+        var code = tile.halfWallCognitives[idx];
+        if (!code || code.length !== 5) return false;
+        return !cognitiveCodeToVictimLetter(code);
+    };
+
+    var _cogLetterColors = {F: '#d32f2f', P: '#6a1b9a', C: '#1565c0', O: '#e65100'};
+    $scope.cogLetterStyle = function(letter) {
+        return {
+            color: _cogLetterColors[letter] || '#b35c00',
+            textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff'
+        };
+    };
+
     function _firstCogLabel(arr, indices) {
         if (!arr) return '';
         for (var i = 0; i < indices.length; i++) {
@@ -3072,7 +3117,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
     function _hasCogCode(arr, indices) {
         if (!arr) return false;
         for (var i = 0; i < indices.length; i++) {
-            if (arr[indices[i]] && arr[indices[i]].length > 0) return true;
+            if (arr[indices[i]] && arr[indices[i]].length === 5) return true;
         }
         return false;
     }
@@ -3100,22 +3145,22 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
 
     $scope.cogTopIsFake = function(tile) {
         if (!tile) return false;
-        var hasCode = (tile.cognitives && tile.cognitives.top_code) || _hasCogCode(tile.halfWallCognitives, [0, 4, 1, 7]);
+        var hasCode = (tile.cognitives && tile.cognitives.top_code && tile.cognitives.top_code.length === 5) || _hasCogCode(tile.halfWallCognitives, [0, 4, 1, 7]);
         return hasCode && !$scope.cogTopLabel(tile);
     };
     $scope.cogRightIsFake = function(tile) {
         if (!tile) return false;
-        var hasCode = (tile.cognitives && tile.cognitives.right_code) || _hasCogCode(tile.halfWallCognitives, [5, 13, 6, 12]);
+        var hasCode = (tile.cognitives && tile.cognitives.right_code && tile.cognitives.right_code.length === 5) || _hasCogCode(tile.halfWallCognitives, [5, 13, 6, 12]);
         return hasCode && !$scope.cogRightLabel(tile);
     };
     $scope.cogBottomIsFake = function(tile) {
         if (!tile) return false;
-        var hasCode = (tile.cognitives && tile.cognitives.bottom_code) || _hasCogCode(tile.halfWallCognitives, [10, 14, 9, 15]);
+        var hasCode = (tile.cognitives && tile.cognitives.bottom_code && tile.cognitives.bottom_code.length === 5) || _hasCogCode(tile.halfWallCognitives, [10, 14, 9, 15]);
         return hasCode && !$scope.cogBottomLabel(tile);
     };
     $scope.cogLeftIsFake = function(tile) {
         if (!tile) return false;
-        var hasCode = (tile.cognitives && tile.cognitives.left_code) || _hasCogCode(tile.halfWallCognitives, [3, 11, 2, 8]);
+        var hasCode = (tile.cognitives && tile.cognitives.left_code && tile.cognitives.left_code.length === 5) || _hasCogCode(tile.halfWallCognitives, [3, 11, 2, 8]);
         return hasCode && !$scope.cogLeftLabel(tile);
     };
 
