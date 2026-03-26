@@ -170,15 +170,15 @@
       </tr>
       <tr>
         <th style="width: var(--row-with)">Φ</th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="1" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="1" style="display: block;" ng-change="cell.tile.halfWallCognitives[c] = ''"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">Ψ</th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="3" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="3" style="display: block;" ng-change="cell.tile.halfWallCognitives[c] = ''"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">Ω</th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="2" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="2" style="display: block;" ng-change="cell.tile.halfWallCognitives[c] = ''"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">{{"admin.simMapEditor.cognitives" | translate}}</th>
@@ -188,7 +188,7 @@
       </tr>
       <tr>
         <th style="width: var(--row-with)"><img src="/images/no_victims.png" alt="None" height="20"/></th>
-        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="" style="display: block;"> </td>
+        <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="" style="display: block;" ng-change="cell.tile.halfWallCognitives[c] = ''"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">{{"admin.simMapEditor.victimRotation" | translate}}</th>
