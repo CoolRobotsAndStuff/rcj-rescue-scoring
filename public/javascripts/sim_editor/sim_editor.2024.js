@@ -3238,11 +3238,11 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     <th>Total score</th>
                 </thead>
                 <tbody>
-                    <td>${victimScore}</td>
-                    <td>${checkpointScore}</td>
-                    <td>${exitBonus}</td>
-                    <td>${1.2*(victimScore + checkpointScore + exitBonus)}</td>
-                    <td>${2.2*(victimScore + checkpointScore + exitBonus)}</td>
+                    <td>${victimScore.toFixed(2)}</td>
+                    <td>${checkpointScore.toFixed(2)}</td>
+                    <td>${exitBonus.toFixed(2)}</td>
+                    <td>${(1.2*(victimScore + checkpointScore + exitBonus)).toFixed(2)}</td>
+                    <td>${(2.2*(victimScore + checkpointScore + exitBonus)).toFixed(2)}</td>
                 </tbody>
             </table>
         `;

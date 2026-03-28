@@ -103,10 +103,10 @@
   <div style="text-align: center; margin-top: 20px">
   <div style="margin: auto;">
     {{"admin.simMapEditor.victimRotation" | translate}}
-    <input type="number" name="rotation-spinbox" ng-model="cell.tile.single_victim_rotation" min="0" max="359" value="0" step="1" style="display: inline-block;">
+    <input type="number" name="rotation-spinbox" ng-model="cell.tile.single_victim_rotation" min="0" max="359" value="0" step="1" style="display: inline-block;" ng-disabled="cell.tile.cognitives && ((cell.tile.cognitives.top_code && cell.tile.cognitives.top_code.length === 5) || (cell.tile.cognitives.bottom_code && cell.tile.cognitives.bottom_code.length === 5) || (cell.tile.cognitives.left_code && cell.tile.cognitives.left_code.length === 5) || (cell.tile.cognitives.right_code && cell.tile.cognitives.right_code.length === 5))">
 
     {{"admin.simMapEditor.victimIsFake" | translate}}
-    <input type="checkbox" name="is-fake-checkbox" ng-model="cell.tile.victim_is_fake" style="display: inline-block;">
+    <input type="checkbox" name="is-fake-checkbox" ng-model="cell.tile.victim_is_fake" style="display: inline-block;" ng-disabled="cell.tile.cognitives && ((cell.tile.cognitives.top_code && cell.tile.cognitives.top_code.length === 5) || (cell.tile.cognitives.bottom_code && cell.tile.cognitives.bottom_code.length === 5) || (cell.tile.cognitives.left_code && cell.tile.cognitives.left_code.length === 5) || (cell.tile.cognitives.right_code && cell.tile.cognitives.right_code.length === 5))">
   </div>
   </div>
 
@@ -192,11 +192,11 @@
       </tr>
       <tr>
         <th style="width: var(--row-with)">{{"admin.simMapEditor.victimRotation" | translate}}</th>
-        <td ng-repeat="c in range(16)"> <input type="number" min="0" max="359" style="width: 100%; display: block;" ng-model="cell.tile.halfWallVicRots[c]" value="0"> </td>
+        <td ng-repeat="c in range(16)"> <input type="number" min="0" max="359" style="width: 100%; display: block;" ng-model="cell.tile.halfWallVicRots[c]" value="0" ng-disabled="cell.tile.halfWallCognitives && cell.tile.halfWallCognitives[c] && cell.tile.halfWallCognitives[c].length === 5"> </td>
       </tr>
       <tr>
         <th style="width: var(--row-with)">{{"admin.simMapEditor.victimIsFake" | translate}}</th>
-        <td ng-repeat="c in range(16)"> <input type="checkbox" style="width: 100%; display: block;" ng-model="cell.tile.halfWallVicFakes[c]" value="false"> </td>
+        <td ng-repeat="c in range(16)"> <input type="checkbox" style="width: 100%; display: block;" ng-model="cell.tile.halfWallVicFakes[c]" value="false" ng-disabled="cell.tile.halfWallCognitives && cell.tile.halfWallCognitives[c] && cell.tile.halfWallCognitives[c].length === 5"> </td>
       </tr>
     </table>
     <br>
