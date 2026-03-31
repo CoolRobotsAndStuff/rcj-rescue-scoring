@@ -15,6 +15,7 @@ public/sw.js*
 public/workbox-*
 
 .idea/
+maps/
 
 #MEAN STACK 
 
