@@ -2207,7 +2207,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 }
                 if(tile.half_wall_tokens){
                     for (var i in $scope.range(16)) {
-                        if (tile.half_wall_tokens[i]) {
+                        if (tile.half_wall_tokens[i] || (tile.half_wall_tokens_cognitive_codes && tile.half_wall_tokens_cognitive_codes[i])) {
                             let humanType = Number(tile.half_wall_tokens[i]);
                             let humanPos = [(x * 0.3 * tileScale[0]) + startX , (z * 0.3 * tileScale[2]) + startZ]
                             let humanFrontRotation = tile.half_wall_tokens_front_rot[i];
@@ -2270,15 +2270,29 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         humanId = humanId + 1
                                     }
                                 } else if (humanType>= 5 && humanType <= 8) { // is hazmat sign
+                                    let cogOffsetFactor = inside ? inside : 0.25;
                                     allHazards = allHazards + hazardPart({
-                                        x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
-                                        z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
+                                        x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * cogOffsetFactor,
+                                        z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * cogOffsetFactor,
                                         rot: humanRotationCurve[curveDir],
                                         frontRotation: humanFrontRotation,
                                         is_fake: humanIsFake,
                                         id: hazardId,
                                         type: tile.half_wall_tokens_cognitive_codes[i],
                                         score: score
+                                    })
+                                    hazardId = hazardId + 1
+                                } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code
+                                    let cogOffsetFactor = inside ? inside : 0.25;
+                                    allHazards = allHazards + hazardPart({
+                                        x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * cogOffsetFactor,
+                                        z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * cogOffsetFactor,
+                                        rot: humanRotationCurve[curveDir],
+                                        frontRotation: humanFrontRotation,
+                                        is_fake: humanIsFake,
+                                        id: hazardId,
+                                        type: tile.half_wall_tokens_cognitive_codes[i],
+                                        score: 0
                                     })
                                     hazardId = hazardId + 1
                                 }
@@ -2309,6 +2323,18 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         id: hazardId,
                                         type: tile.half_wall_tokens_cognitive_codes[i],
                                         score: score
+                                    })
+                                    hazardId = hazardId + 1
+                                } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code
+                                    allHazards = allHazards + hazardPart({
+                                        x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
+                                        z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
+                                        rot: humanRotation[i % 4],
+                                        frontRotation: humanFrontRotation,
+                                        is_fake: humanIsFake,
+                                        id: hazardId,
+                                        type: tile.half_wall_tokens_cognitive_codes[i],
+                                        score: 0
                                     })
                                     hazardId = hazardId + 1
                                 }
