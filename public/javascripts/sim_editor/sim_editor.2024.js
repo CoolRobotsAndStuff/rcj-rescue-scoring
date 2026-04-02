@@ -3076,9 +3076,11 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         const letter = cognitiveCodeToVictimLetter(code);
         if (letter) {
             cell.tile.halfWallVic[idx] = _hwLetterToNum[letter];
+        } else if (code) {
+            cell.tile.halfWallVic[idx] = null;
         } else {
             const cur = cell.tile.halfWallVic[idx];
-            if (cur >= 5 && cur <= 8) cell.tile.halfWallVic[idx] = '';
+            if (cur === null || (cur >= 5 && cur <= 8)) cell.tile.halfWallVic[idx] = '';
         }
     };
 
