@@ -2188,7 +2188,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                 is_fake: tile.wall_token_is_fake,
                                 id: humanId,
                                 type: humanTypesVisual[tile.wall_token_type - 1],
-                                score: score
+                                score: 0
                             })
                             fakeHumanId = fakeHumanId + 1
                         } else {
@@ -2253,7 +2253,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                             is_fake: humanIsFake,
                                             id: humanId,
                                             type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
-                                            score: score
+                                            score: 0
                                         })
                                         fakeHumanId = fakeHumanId + 1
 
@@ -2312,7 +2312,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                             is_fake: humanIsFake,
                                             id: humanId,
                                             type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
-                                            score: score
+                                            score: 0
                                         })
                                         fakeHumanId = fakeHumanId + 1
                                     } else {
@@ -2464,6 +2464,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         score: area4Humans[i].score,
                     }
                     if (thisHuman.is_fake) {
+                        thisHuman.score = 0;
                         allFakes += visualHumanPart(thisHuman)
                         fakeHumanId += 1
                     } else {
@@ -3336,7 +3337,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         Object.keys($scope.cells).map(function(key){
             let cell = $scope.cells[key];
             if(cell.isTile){
-                if(cell.tile.victims){
+                if(cell.tile.victims && !cell.tile.victim_is_fake){
                     Object.keys(cell.tile.victims).map(function(dir){
                         if(victims.includes(cell.tile.victims[dir])){
                             victimScore += (cell.isLinear ? 5 : 15) * areaMultiplier[checkRoomNumberKey(key)];
@@ -3349,9 +3350,11 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 }
                 if(cell.tile.halfWallVic){
                     for(let i of $scope.range(16)){
-                        let v = Number(cell.tile.halfWallVic[i]);
-                        if(v == "") continue;
-                        if(v >= 0 && v <= 3){
+                        let raw = cell.tile.halfWallVic[i];
+                        if(raw === null || raw === undefined || raw === '' || raw === 0) continue;
+                        if(cell.tile.halfWallVicFakes && cell.tile.halfWallVicFakes[i]) continue;
+                        let v = Number(raw);
+                        if(v >= 1 && v <= 3){
                             victimScore += (cell.isLinear ? 5 : 15) * areaMultiplier[checkRoomNumberKey(key)];
                             victimScore += 10 * areaMultiplier[checkRoomNumberKey(key)];
                         }else if(v >= 5 && v <= 8){
