@@ -1307,14 +1307,15 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         return final_rot;
     }
 
-    const HUMAN_NONE = 0;
-    const HUMAN_H    = 1;
-    const HUMAN_U    = 2;
-    const HUMAN_S    = 3;
-    const HUMAN_F    = 5;
-    const HUMAN_P    = 6;
-    const HUMAN_C    = 7;
-    const HUMAN_O    = 8;
+    const HUMAN_NONE    = 0;
+    const HUMAN_H       = 1;
+    const HUMAN_U       = 2;
+    const HUMAN_S       = 3;
+    const HUMAN_F       = 5;
+    const HUMAN_P       = 6;
+    const HUMAN_C       = 7;
+    const HUMAN_O       = 8;
+    const HUMAN_CT_FAKE = 9; // CT with sum outside [0,3] → CTfake, scoreWorth 0
 
     /**
     * @param {string} str
@@ -1351,6 +1352,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         case 1: return HUMAN_P;
         case 2: return HUMAN_C;
         case 3: return HUMAN_O;
+        default: return HUMAN_CT_FAKE; // sum outside [0,3] → CTfake
         }
     }
 
@@ -2157,11 +2159,10 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         }
                     }
 
-                    if (tile.wall_token_type >= 5 && tile.wall_token_type <= 8){ //hazards
+                    if (tile.wall_token_type >= 5){ //hazards (includes HUMAN_CT_FAKE=9)
                         humanPos[0] = humanPos[0] + hazardOffset[tile.wall_token_place][0] + randomOffset[0]
                         humanPos[1] = humanPos[1] + hazardOffset[tile.wall_token_place][1] + randomOffset[1]
-                        let score = 30
-                        if(tile.is_linear) score = 10
+                        let score = (tile.wall_token_type === HUMAN_CT_FAKE) ? 0 : (tile.is_linear ? 10 : 30)
                         allHazards = allHazards + hazardPart({
                             x: humanPos[0],
                             z: humanPos[1],
@@ -2269,8 +2270,9 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         })
                                         humanId = humanId + 1
                                     }
-                                } else if (humanType>= 5 && humanType <= 8) { // is hazmat sign
+                                } else if (humanType >= 5) { // is hazmat sign (includes CTfake=9)
                                     let cogOffsetFactor = inside ? inside : 0.25;
+                                    let hazScore = (humanType === HUMAN_CT_FAKE) ? 0 : score;
                                     allHazards = allHazards + hazardPart({
                                         x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * cogOffsetFactor,
                                         z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * cogOffsetFactor,
@@ -2279,10 +2281,10 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         is_fake: humanIsFake,
                                         id: hazardId,
                                         type: tile.half_wall_tokens_cognitive_codes[i],
-                                        score: score
+                                        score: hazScore
                                     })
                                     hazardId = hazardId + 1
-                                } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code
+                                } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code (legacy fallback)
                                     let cogOffsetFactor = inside ? inside : 0.25;
                                     allHazards = allHazards + hazardPart({
                                         x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * cogOffsetFactor,
@@ -2327,7 +2329,8 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         humanId = humanId + 1
                                     }
                                 }
-                                else if (humanType>= 5 && humanType <= 8) {
+                                else if (humanType >= 5) { // is hazmat sign (includes CTfake=9)
+                                    let hazScore = (humanType === HUMAN_CT_FAKE) ? 0 : score;
                                     allHazards = allHazards + hazardPart({
                                         x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
                                         z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
@@ -2336,10 +2339,10 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                         is_fake: humanIsFake,
                                         id: hazardId,
                                         type: tile.half_wall_tokens_cognitive_codes[i],
-                                        score: score
+                                        score: hazScore
                                     })
                                     hazardId = hazardId + 1
-                                } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code
+                                } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code (legacy fallback)
                                     allHazards = allHazards + hazardPart({
                                         x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
                                         z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
