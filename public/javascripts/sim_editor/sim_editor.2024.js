@@ -2986,8 +2986,23 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
 
             finalAngles = calculateWallTokenRot(angle, frontAngle);
 
-            let vicX = parseFloat(((closePoint[1] / imgWidth) * room4Width).toFixed(roundDigits)) + room4xOffset;
-            let vicY = parseFloat(((closePoint[0] / imgHeight) * room4Height).toFixed(roundDigits)) + room4zOffset;
+            // Push closePoint slightly into the room (toward the blob centroid)
+            // to avoid signs clipping inside the wall.
+            // vicWidth is in pixels at this point (~1 victim width away from wall surface).
+            let offsetPx = vicWidth * 0.1;
+            let dRow = point[0] - closePoint[0];
+            let dCol = point[1] - closePoint[1];
+            let dLen = Math.sqrt(dRow * dRow + dCol * dCol);
+            let shiftedPoint = closePoint;
+            if (dLen > 0) {
+                shiftedPoint = [
+                    closePoint[0] + (dRow / dLen) * offsetPx,
+                    closePoint[1] + (dCol / dLen) * offsetPx
+                ];
+            }
+
+            let vicX = parseFloat(((shiftedPoint[1] / imgWidth) * room4Width).toFixed(roundDigits)) + room4xOffset;
+            let vicY = parseFloat(((shiftedPoint[0] / imgHeight) * room4Height).toFixed(roundDigits)) + room4zOffset;
 
             let randIdx = 0;
             if ($scope.room4VicTypes.length != vicContours.size()) {
