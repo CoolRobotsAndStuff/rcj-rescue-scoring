@@ -2244,7 +2244,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                                     score = score / 2;
                                     //allHumans = allHumans + visualHumanPart({x: humanPos[0], z: humanPos[1], rot: humanRotationCurve[curveDir], id: humanId, type: humanTypesVisual[walls[z][x][13][i] - 1], score: score})
                                     if (humanIsFake) {
-                                        allHumans = allHumans + visualHumanPart({
+                                        allFakes = allFakes + visualHumanPart({
                                             x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
                                             z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
                                             rot: humanRotationCurve[curveDir],
@@ -2301,17 +2301,31 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                             else {
                                 if (humanType >= 0 && humanType <= 3) {
                                     score = score / 2;
-                                    allHumans = allHumans + visualHumanPart({
-                                        x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
-                                        z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
-                                        rot: humanRotation[i % 4],
-                                        frontRotation: humanFrontRotation,
-                                        is_fake: humanIsFake,
-                                        id: humanId,
-                                        type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
-                                        score: score
-                                    })
-                                    humanId = humanId + 1
+                                    if (humanIsFake) {
+                                        allFakes = allFakes + visualHumanPart({
+                                            x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
+                                            z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
+                                            rot: humanRotation[i % 4],
+                                            frontRotation: humanFrontRotation,
+                                            is_fake: humanIsFake,
+                                            id: humanId,
+                                            type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
+                                            score: score
+                                        })
+                                        fakeHumanId = fakeHumanId + 1
+                                    } else {
+                                        allHumans = allHumans + visualHumanPart({
+                                            x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
+                                            z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
+                                            rot: humanRotation[i % 4],
+                                            frontRotation: humanFrontRotation,
+                                            is_fake: humanIsFake,
+                                            id: humanId,
+                                            type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
+                                            score: score
+                                        })
+                                        humanId = humanId + 1
+                                    }
                                 }
                                 else if (humanType>= 5 && humanType <= 8) {
                                     allHazards = allHazards + hazardPart({
@@ -2396,6 +2410,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
             let scoringElements = createArea4Victims(humanId, hazardId);
             allHumans += scoringElements[0];
             allHazards += scoringElements[1];
+            allFakes += scoringElements[2];
         }
         else {
             room4 = $scope.area4[$scope.area4Room.type]
@@ -2440,11 +2455,17 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         rot: area4Humans[i].rot + area4Rot * -1.57,
                         frontRotation: getRandomAngle(),
                         id: humanId,
+                        is_fake: area4Humans[i].is_fake,
                         type: area4Humans[i].type,
                         score: area4Humans[i].score,
                     }
-                    allHumans += visualHumanPart(thisHuman)
-                    humanId += 1
+                    if (thisHuman.is_fake) {
+                        allFakes += visualHumanPart(thisHuman)
+                        fakeHumanId += 1
+                    } else {
+                        allHumans += visualHumanPart(thisHuman)
+                        humanId += 1
+                    }
                 }
                 area4Hazards = room4.hazards
                 for (i = 0; i < area4Hazards.length; i++) {
@@ -2803,8 +2824,29 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
     function createArea4Victims(startHumanId, startHazardId) {
         let outputStrVic = "";
         let outputStrHaz = "";
-        const scoringElem = ["harmed", "stable", "unharmed", "P", "O", "F", "C"];
-        
+        let outputStrFake = "";
+        const scoringTypes = [
+            { type: "harmed",   weight: 1/6, category: "victim" },
+            { type: "stable",   weight: 1/6, category: "victim" },
+            { type: "unharmed", weight: 1/6, category: "victim" },
+            { type: "P",        weight: 0,   category: "hazard" },
+            { type: "O",        weight: 0,   category: "hazard" },
+            { type: "F",        weight: 0,   category: "hazard" },
+            { type: "C",        weight: 0,   category: "hazard" },
+            { type: "psi",      weight: 1/6, category: "fake"   },
+            { type: "phi",      weight: 1/6, category: "fake"   },
+            { type: "omega",    weight: 1/6, category: "fake"   },
+        ];
+        function weightedRandomType() {
+            let r = Math.random();
+            let cumulative = 0;
+            for (let i = 0; i < scoringTypes.length; i++) {
+                cumulative += scoringTypes[i].weight;
+                if (r < cumulative) return i;
+            }
+            return scoringTypes.length - 1;
+        }
+
         // let src = cv.imread(imgElement);
         /*let context = $scope.room4CanvasSave.getContext('2d');
         let imgData = context.getImageData(0, 0, $scope.canvasWidth, $scope.canvasHeight);
@@ -2905,35 +2947,34 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
             let vicX = parseFloat(((closePoint[1] / imgWidth) * room4Width).toFixed(roundDigits)) + room4xOffset;
             let vicY = parseFloat(((closePoint[0] / imgHeight) * room4Height).toFixed(roundDigits)) + room4zOffset;
 
-            let rand = 0;
+            let randIdx = 0;
             if ($scope.room4VicTypes.length != vicContours.size()) {
-                rand = parseInt(Math.random() * scoringElem.length);
-                if (DISABLE_RANDOMNESS) 
-                    rand = parseInt(0.5 * scoringElem.length);
-                $scope.room4VicTypes.push(rand);
+                if (DISABLE_RANDOMNESS)
+                    randIdx = parseInt(0.5 * scoringTypes.length);
+                else
+                    randIdx = weightedRandomType();
+                $scope.room4VicTypes.push(randIdx);
             } else {
-                rand = $scope.room4VicTypes[x];
+                randIdx = $scope.room4VicTypes[x];
+                // Re-roll if cached index maps to a disabled type (weight 0)
+                if (scoringTypes[randIdx] && scoringTypes[randIdx].weight === 0) {
+                    randIdx = weightedRandomType();
+                    $scope.room4VicTypes[x] = randIdx;
+                }
             }
-            if (rand <= 2) { // victim
-                is_fake = Math.random() < 0.3;
-                if (DISABLE_RANDOMNESS) is_fake = false;
+            let chosen = scoringTypes[randIdx];
 
-                name = "Victim"
-                if (is_fake) name = "Fake"
-                outputStrVic += 
-                name + ` {
-                    translation `;
-                outputStrVic += vicX.toString() + ' 0 ' + vicY.toString();
-                outputStrVic += `
-                    rotation ${finalAngles.x} ${finalAngles.y} ${finalAngles.z} ${finalAngles.angle}`;
-                outputStrVic += `
-                    name "` + name + startHumanId.toString() + `"
-                    type "` + scoringElem[rand] + `"
+            if (chosen.category === "victim") {
+                outputStrVic += `Victim {
+                    translation ` + vicX.toString() + ' 0 ' + vicY.toString() + `
+                    rotation ${finalAngles.x} ${finalAngles.y} ${finalAngles.z} ${finalAngles.angle}
+                    name "Victim` + startHumanId.toString() + `"
+                    type "` + chosen.type + `"
                     scoreWorth 15
                 }
                 `;
                 startHumanId += 1;
-            } else { // hazard
+            } else if (chosen.category === "hazard") {
                 outputStrHaz += `
                     HazardMap {
                         translation `;
@@ -2942,11 +2983,23 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         rotation ${finalAngles.x} ${finalAngles.y} ${finalAngles.z} ${finalAngles.angle}`;
                     outputStrHaz += `
                         name "Hazard` + startHazardId.toString() + `"
-                        type "` + scoringElem[rand] + `"
+                        type "` + chosen.type + `"
                         scoreWorth 30
                     }
-                    `; // TODO: cognitives
+                    `;
                 startHazardId += 1;
+            } else { // fake: psi, phi, omega
+                let fakeAngles = calculateWallTokenRot(angle, 0);
+                outputStrFake +=
+                `Fake {
+                    translation ` + vicX.toString() + ' 0 ' + vicY.toString() + `
+                    rotation ${fakeAngles.x} ${fakeAngles.y} ${fakeAngles.z} ${fakeAngles.angle}
+                    name "Fake` + startHumanId.toString() + `"
+                    type "` + chosen.type + `"
+                    scoreWorth 0
+                }
+                `;
+                startHumanId += 1;
             }
 
             /*cv.circle(src, new cv.Point(cx, cy), 3, new cv.Scalar(0, 255, 0, 255), 5);
@@ -2955,7 +3008,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
             //cv.circle(src, new cv.Point(closePoint[1], closePoint[0]), 5, new cv.Scalar(0, 0, 255, 255), 5);
             showImg(src);*/
         }
-        return [outputStrVic, outputStrHaz];
+        return [outputStrVic, outputStrHaz, outputStrFake];
     }
 
     $scope.cellClick = function (x, y, z, isWall, isTile) {
