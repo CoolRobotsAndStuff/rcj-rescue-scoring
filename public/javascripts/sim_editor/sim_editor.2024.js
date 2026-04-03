@@ -2823,27 +2823,42 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
 
 
     // Generates a random 5-character CT code from {K,R,Y,G,B} where:
-    // K=-2, R=-1, Y=0, G=1, B=2, and the sum of all 5 character values equals the
-    // target sum determined by hazardType: F=0, P=1, C=2, O=3.
+    // K=-2, R=-1, Y=0, G=1, B=2.
+    // For F=0, P=1, C=2, O=3: sum of chars equals the target value (valid CT).
+    // For X (CTfake): sum must NOT be in [0,3] (invalid CT).
     function randomCognitiveCode(hazardType) {
-        const targetSumMap = { 'F': 0, 'P': 1, 'C': 2, 'O': 3 };
-        const targetSum = targetSumMap[hazardType];
         const chars  = ['K', 'R', 'Y', 'G', 'B'];
         const values = { 'K': -2, 'R': -1, 'Y': 0, 'G': 1, 'B': 2 };
-        while (true) {
-            let code = '';
-            let sum = 0;
-            for (let i = 0; i < 4; i++) {
-                let c = chars[Math.floor(Math.random() * chars.length)];
-                code += c;
-                sum += values[c];
+        if (hazardType === 'X') {
+            // CTfake: generate until sum is outside [0, 3]
+            while (true) {
+                let code = '';
+                let sum = 0;
+                for (let i = 0; i < 5; i++) {
+                    let c = chars[Math.floor(Math.random() * chars.length)];
+                    code += c;
+                    sum += values[c];
+                }
+                if (sum < 0 || sum > 3) return code;
             }
-            let needed = targetSum - sum;
-            if (needed >= -2 && needed <= 2) {
-                let lastChar = Object.keys(values).find(k => values[k] === needed);
-                return code + lastChar;
+        } else {
+            const targetSumMap = { 'F': 0, 'P': 1, 'C': 2, 'O': 3 };
+            const targetSum = targetSumMap[hazardType];
+            while (true) {
+                let code = '';
+                let sum = 0;
+                for (let i = 0; i < 4; i++) {
+                    let c = chars[Math.floor(Math.random() * chars.length)];
+                    code += c;
+                    sum += values[c];
+                }
+                let needed = targetSum - sum;
+                if (needed >= -2 && needed <= 2) {
+                    let lastChar = Object.keys(values).find(k => values[k] === needed);
+                    return code + lastChar;
+                }
+                // sum of first 4 chars doesn't allow a valid 5th char, retry
             }
-            // sum of first 4 chars doesn't allow a valid 5th char, retry
         }
     }
 
@@ -2852,16 +2867,17 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         let outputStrHaz = "";
         let outputStrFake = "";
         const scoringTypes = [
-            { type: "harmed",   weight: 1/10, category: "victim" },
-            { type: "stable",   weight: 1/10, category: "victim" },
-            { type: "unharmed", weight: 1/10, category: "victim" },
-            { type: "P",        weight: 1/10, category: "hazard" },
-            { type: "O",        weight: 1/10, category: "hazard" },
-            { type: "F",        weight: 1/10, category: "hazard" },
-            { type: "C",        weight: 1/10, category: "hazard" },
-            { type: "psi",      weight: 1/10, category: "fake"   },
-            { type: "phi",      weight: 1/10, category: "fake"   },
-            { type: "omega",    weight: 1/10, category: "fake"   },
+            { type: "harmed",   weight: 1/11, category: "victim" },
+            { type: "stable",   weight: 1/11, category: "victim" },
+            { type: "unharmed", weight: 1/11, category: "victim" },
+            { type: "P",        weight: 1/11, category: "hazard" },
+            { type: "O",        weight: 1/11, category: "hazard" },
+            { type: "F",        weight: 1/11, category: "hazard" },
+            { type: "C",        weight: 1/11, category: "hazard" },
+            { type: "X",        weight: 1/11, category: "hazard" },
+            { type: "psi",      weight: 1/11, category: "fake"   },
+            { type: "phi",      weight: 1/11, category: "fake"   },
+            { type: "omega",    weight: 1/11, category: "fake"   },
         ];
         function weightedRandomType() {
             let r = Math.random();
@@ -3006,7 +3022,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     rotation ${finalAngles.x} ${finalAngles.y} ${finalAngles.z} ${finalAngles.angle}
                     name "Hazard` + startHazardId.toString() + `"
                     type "` + randomCognitiveCode(chosen.type) + `"
-                    scoreWorth 30
+                    scoreWorth ` + (chosen.type === 'X' ? 0 : 30) + `
                 }
                 `;
                 startHazardId += 1;
