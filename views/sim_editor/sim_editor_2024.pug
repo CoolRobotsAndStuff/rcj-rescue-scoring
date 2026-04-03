@@ -70,6 +70,7 @@ block content
                         select(ng-model='area4Room', ng-options="room as room.value for room in area4", ng-init="area4Room=area4[0]", ng-change="updateRoom4Pick()", style="margin-right:10px;")
                         button.btn.btn-outline-dark#showRoom4Canvas(type='button', ng-click='openCustomRoom4()', style="margin:5px;display:none;")
                             p Create Custom Room 4
+                    button.btn.btn-secondary(type='button', ng-click='activateExteriorWalls()', style="margin:10px;") {{"admin.simMapEditor.extWalls" | translate}}
 
         .row
             .col-11

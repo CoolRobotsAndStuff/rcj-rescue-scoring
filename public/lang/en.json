@@ -936,6 +936,7 @@
             "select3": "Select Room 3 Tiles (Curved Walls)",
             "select4": "Select Room 4 Tiles (Anything)",
             "pick4": "Select Room 4 Configuration",
+            "extWalls": "Create ext walls",
             "innerTile": "Inner Tile Walls",
             "js":{
                 "startTileError": "Please set the start tile."

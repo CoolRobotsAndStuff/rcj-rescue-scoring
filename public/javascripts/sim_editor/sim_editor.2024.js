@@ -3064,6 +3064,30 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
         return [outputStrVic, outputStrHaz, outputStrFake];
     }
 
+    $scope.activateExteriorWalls = function () {
+        var W = $scope.width * 2;
+        var L = $scope.length * 2;
+        var z = $scope.z;
+        // Top row (y=0) and bottom row (y=L): horizontal walls, x odd
+        for (var x = 1; x < W; x += 2) {
+            [0, L].forEach(function (y) {
+                var key = x + ',' + y + ',' + z;
+                if (!$scope.cells[key]) $scope.cells[key] = {};
+                $scope.cells[key].isWall = true;
+                $scope.cells[key].halfWall = 0;
+            });
+        }
+        // Left column (x=0) and right column (x=W): vertical walls, y odd
+        for (var y = 1; y < L; y += 2) {
+            [0, W].forEach(function (x) {
+                var key = x + ',' + y + ',' + z;
+                if (!$scope.cells[key]) $scope.cells[key] = {};
+                $scope.cells[key].isWall = true;
+                $scope.cells[key].halfWall = 0;
+            });
+        }
+    }
+
     $scope.cellClick = function (x, y, z, isWall, isTile) {
         var cell = $scope.cells[x + ',' + y + ',' + z];
         var halfWallTile;

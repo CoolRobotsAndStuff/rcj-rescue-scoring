@@ -932,6 +932,7 @@
             "select3": "部屋3のタイルを選ぶ (カーブした壁)",
             "select4": "部屋4のタイルを選ぶ",
             "pick4": "部屋4のタイルの設定",
+            "extWalls": "Create ext walls",
             "innerTile": "タイルの中の壁",
             "js":{
                 "startTileError": "スタートタイルを設定してください．"
