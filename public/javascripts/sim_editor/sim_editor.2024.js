@@ -1576,8 +1576,16 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
 
                 tile.half_wall_tokens_cognitive_codes = thisCell.tile.halfWallCognitives
 
-                arr2 = tile.half_wall_tokens_cognitive_codes
-                arr1 = thisCell.tile.halfWallVic
+                // Normalize: objects with numeric keys (e.g. {"0":"1"}) -> sparse array
+                function objToArray(val) {
+                    if (!val || Array.isArray(val)) return val || [];
+                    var arr = [];
+                    Object.keys(val).forEach(function(k) { arr[parseInt(k)] = val[k]; });
+                    return arr;
+                }
+                arr2 = objToArray(tile.half_wall_tokens_cognitive_codes);
+                tile.half_wall_tokens_cognitive_codes = arr2;
+                arr1 = objToArray(thisCell.tile.halfWallVic);
                 tile.half_wall_tokens = []
 
                 console.log("half_wall_tokens_cognitive_codes", tile.half_wall_tokens_cognitive_codes)
@@ -1597,7 +1605,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 console.log(tile.half_wall_tokens)
                 //tile.half_wall_tokens           = 
 
-                tile.half_wall_tokens_front_rot = thisCell.tile.halfWallVicRots.map(Number).map(degreesToRadians);
+                tile.half_wall_tokens_front_rot = objToArray(thisCell.tile.halfWallVicRots).map(Number).map(degreesToRadians);
                 tile.half_wall_tokens_fakes     = thisCell.tile.halfWallVicFakes;
                 tile.floor_color                = floorColor;
                 tile.room_number                = checkRoomNumber(x,y,0);
