@@ -53,7 +53,6 @@
           "disable": "無効",
           "refresh": "稼働中のサイネージを強制更新する",
           "add_blank": "空の項目を追加",
-          "timetable": "タイムテーブル",
           "score": "競技結果（ランキング）",
           "alert": {
               "update": "更新",
@@ -606,10 +605,12 @@
             "super": "特権管理権限",
             "admin": "管理権限",
             "password": "パスワード",
+            "email": "メールアドレス",
             "authoritySuper": "特別管理権限付与",
             "authorityAdmin": "一般管理権限付与",
             "authorization": "付与",
-            "add": "ユーザーを追加"
+            "add": "ユーザーを追加",
+            "emailNotification": "メール通知"
         },
         "competition": {
             "title": "管理画面トップ",
@@ -751,6 +752,7 @@
             "cp" : "チェックポイント",
             "black" : "黒タイル",
             "blue": "青タイル",
+            "red": "赤タイル",
             "down": "坂の下の水平なタイル",
             "up": "坂の上の水平なタイル",
             "top": "@:admin.lineMapEditor.top",
@@ -920,7 +922,9 @@
             "noStart": "@:admin.lineMapEditor.noStart",
             "start": "@:admin.lineMapEditor.start",
             "placement" : "被災者の配置：",
-            "victimRotation": "@:admin.lineMapEditor.victimRotation",
+            "victimRotation": "被害者の視点：",
+            "victimIsFake": "被害者は偽物です:",
+            "cognitives": "認知",
             "export": "@:admin.lineMapEditor.export",
             "import": "@:admin.lineMapEditor.import",
             "exportW": "このマップをErebus用ワールドファイルにエクスポート",
@@ -932,8 +936,9 @@
             "select3": "部屋3のタイルを選ぶ (カーブした壁)",
             "select4": "部屋4のタイルを選ぶ",
             "pick4": "部屋4のタイルの設定",
-            "extWalls": "Create ext walls",
+            "extWalls": "外壁を作成する",
             "innerTile": "タイルの中の壁",
+            "victimRotation": "符号回転",
             "js":{
                 "startTileError": "スタートタイルを設定してください．"
             }
@@ -1015,14 +1020,20 @@
             "least": "最低",
             "most": "最高",
             "teamVote": "チーム投票",
-            "explanationOnly": "説明のみ（設問なし）"
+            "explanationOnly": "説明のみ（設問なし）",
+            "maxLength": "最大文字数",
+            "linkedQuestionBlockName": "リンクされた質問ブロック"
         },
         "review_editor": {
             "title": "ドキュメント　レビューフォームエディタ",
             "export": "このレビューフォームをJsonファイルにエクスポート",
             "import": "レビューフォームをJsonファイルからインポート",
             "languageWarn": "言語設定は，チーム向けフォームの設定と連動しています．",
-            "weight": "スコアの重み(0~1)"
+            "weight": "スコアの重み(0~1)",
+            "assignReviewer": "レビュアーの割り当て",
+            "reviewer": "レビュアーの名前",
+            "assignedTeams": "割り当てられたチーム",
+            "emptyAssignment": "割り当て情報が登録されていないため、次のユーザーが評価可能です："
         },
         "form":{
             "languageError": "このフォームは，お使いの言語に対応していませんので，代替言語で表示します．",
@@ -1044,7 +1055,12 @@
             "uploaded": "アップロード済ファイル",
             "cantplay": "動画が正しく再生できない場合は，ここをクリックしてダウンロードしてみてください．",
             "uploading": "アップロード中...",
-            "mp4": "mp4フォーマットのみ受け付けます．他の動画形式(movやaviなど)の場合は，あなたのコンピュータ上でmp4フォーマットに変換してからアップロードしてください．"
+            "mp4": "mp4フォーマットのみ受け付けます．他の動画形式(movやaviなど)の場合は，あなたのコンピュータ上でmp4フォーマットに変換してからアップロードしてください．",
+            "maxLength": "この項目の最大入力可能文字数：",
+            "characters": "文字",
+            "lengthLimit": "このフォームには文字数制限が設定されています。指定文字以上を入力しますと、フォームを保存することができなくなります。",
+            "currentLength": "現在の入力済み文字数",
+            "lengthLimitExceed": "文字数制限を超過しています。"
         },
         "review":{
             "reviewer": "ログインしているレビュアー：",
