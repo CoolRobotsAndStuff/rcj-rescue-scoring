@@ -7,7 +7,7 @@ const adminRouter   = express.Router();
 
 /* GET home page. */
 publicRouter.get('/', function (req, res) {
-  res.render('sim_editor/sim_editor_2024');
+  res.render('sim_editor/sim_editor_2026');
 });
 
 module.exports.public = publicRouter;
