@@ -1432,7 +1432,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                     half_wall_tokens_fakes     : [],
                     half_wall_tokens_cognitive_codes : [],
 
-                    floor_color                : '',
+                    floor_color                : '0.635 0.635 0.635',
                     room_number                : 0,
                 });
             }
