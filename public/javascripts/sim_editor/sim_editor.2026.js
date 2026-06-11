@@ -1991,7 +1991,9 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                 tile = tiles[z][x]
                 if(tile.is_start) tileName = "START_TILE"
                 //Create a new tile with all the data
-                if ($scope.cells[String(x * 2 + 1) + "," + String(z * 2 + 1) + ",0"].tile.halfTile) {
+                let _cellKey = String(x * 2 + 1) + "," + String(z * 2 + 1) + ",0";
+                let _cell = $scope.cells[_cellKey];
+                if (_cell && _cell.tile && _cell.tile.halfTile) {
                     let t1w = [
                         tile.outer_half_walls[UP] == 1 ? tile.outer_half_walls_info[UP] : 0,
                         tile.inner_half_walls[UP],
