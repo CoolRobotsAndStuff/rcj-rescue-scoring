@@ -2169,6 +2169,7 @@ app.controller('SimEditorController', ['$scope', '$uibModal', '$log', '$http','$
                         }
                     }
 
+                    randomOffset = [0,0] // remove random offset for now since it can cause issues with adjacent wall tokens and is not visually necessary
                     if (tile.wall_token_type >= 5){ //hazards (includes HUMAN_CT_FAKE=9)
                         humanPos[0] = humanPos[0] + hazardOffset[tile.wall_token_place][0] + randomOffset[0]
                         humanPos[1] = humanPos[1] + hazardOffset[tile.wall_token_place][1] + randomOffset[1]
