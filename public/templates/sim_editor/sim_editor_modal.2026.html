@@ -53,9 +53,9 @@
     <tr align="center">
       <th>&nbsp;</th>
       <th><img src="/images/no_victims.png" alt="None" height="20"></th>
-      <th>Φ</th>
-      <th>Ψ</th>
-      <th>Ω</th>
+      <th>H</th>
+      <th>S</th>
+      <th>U</th>
       <th><img src="/images/COG_nobg.png" alt="None" height="20"></th>
     </tr>
     <tr align="center">
@@ -169,15 +169,15 @@
         <th style="width: var(--row-width); min-width: var(--row-width); max-width: var(--row-width)" ng-repeat="c in range(16)">{{c + 1}}</th>
       </tr>
       <tr>
-        <th style="width: var(--row-with)">Φ</th>
+        <th style="width: var(--row-with)">H</th>
         <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="1" style="display: block;" ng-change="cell.tile.halfWallCognitives[c] = ''"> </td>
       </tr>
       <tr>
-        <th style="width: var(--row-with)">Ψ</th>
+        <th style="width: var(--row-with)">S</th>
         <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="3" style="display: block;" ng-change="cell.tile.halfWallCognitives[c] = ''"> </td>
       </tr>
       <tr>
-        <th style="width: var(--row-with)">Ω</th>
+        <th style="width: var(--row-with)">U</th>
         <td height="50%" ng-repeat="c in range(16)"> <input type="radio" ng-model="cell.tile.halfWallVic[c]" value="2" style="display: block;" ng-change="cell.tile.halfWallCognitives[c] = ''"> </td>
       </tr>
       <tr>
